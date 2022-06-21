@@ -2,6 +2,7 @@
 
 void setup() {
   pinMode(4, OUTPUT);
+  // teste
 }
 
 void loop() {
