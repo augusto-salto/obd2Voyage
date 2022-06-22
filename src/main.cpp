@@ -12,12 +12,20 @@ ELM327 myELM327;
 //teste2
 
 
-float rpm = 0;
+int rpm = 0;
+int fuelLevel = 0;
+float bateryVoltage = 0;
 float temperatura = 0;
 float posAcel = 0;
 
 float requestElmFloat(float function);
 void errorElm();
+
+void read_batery_voltage();
+void read_RPM();
+void read_fuel_level();
+void check_data_elm();
+
 
 void setup()
 {
@@ -37,7 +45,7 @@ void setup()
   }
   
 
-  if (!myELM327.begin(ELM_PORT, true, 3000))
+  if (!myELM327.begin(ELM_PORT, true, 5000))
   {
     Serial.println("Couldn't connect to OBD scanner - Phase 2");
     while (1);
@@ -52,51 +60,65 @@ void setup()
 
 void loop()
 {
-  rpm = requestElmFloat(myELM327.rpm());
-  temperatura = requestElmFloat(myELM327.engineCoolantTemp());
-  posAcel = requestElmFloat(myELM327.throttle());
-
-  Serial.print("\nRPM: " + (String)rpm);
-  Serial.print("\nTEMPERATURA: " + (String)temperatura);
-  Serial.print("\nACELERADOR: " + (String)posAcel);
-  delay(100);
-    
+  check_data_elm();
+  //read_fuel_level();
+  delay(500);
+  read_RPM();
+  delay(500);
+  read_batery_voltage();
+  delay(500);
+  Serial.print("\nELM STATUS: "); Serial.print(myELM327.nb_rx_state);
+  Serial.print("\nRPM: "); Serial.print(rpm);
+  Serial.print("\nBatery Voltage: "); Serial.print(bateryVoltage);
+  Serial.print("\nFuel Level: "); Serial.print(fuelLevel); Serial.print("%");
 }
 
-float requestElmFloat(float function){
-  float temp = function;
+void check_data_elm(){
+if(myELM327.nb_rx_state == ELM_NO_DATA)
+{
+  Serial.print("\nELM_NO_DATA Reseting\n");
+  myELM327.begin(ELM_PORT, false, 5000);
+}
+}
 
-if (myELM327.nb_rx_state == ELM_SUCCESS)
+void read_RPM()
+{
+  
+ float tempRPM = myELM327.rpm();
+
+  if (myELM327.nb_rx_state == ELM_SUCCESS)
   {
-    return temp;
+    rpm = (uint32_t)tempRPM;
+    
   }
   else if (myELM327.nb_rx_state != ELM_GETTING_MSG)
-  {
-    errorElm(); 
-    return 99.9; //return
-  }
-
+    {myELM327.printError();}
 }
 
-void errorElm(){
-
-       myELM327.printError();
-    Serial.print("\n STATUS BLUETOOTH: ");
-    Serial.print(ELM_PORT.connected());
-    Serial.print("\n STATUS CONEXAO ELM327: ");
-    Serial.print(myELM327.connected);
-    Serial.print("\n");
+void read_batery_voltage()
+{
     
-    if(countError <= 5){
-      countError++;
-    Serial.print("\nCount Errors: ");
-    Serial.print(countError);
+ float bateryTemp = myELM327.batteryVoltage();
 
-    }else{
-      Serial.print("\nTentando reconexao com a ECU");
-      countError = 0;
-      myELM327.begin(ELM_PORT, false, 3000);
-      
-    }
+  if (myELM327.nb_rx_state == ELM_SUCCESS)
+  {
+     bateryVoltage = bateryTemp;
+    
+  }
+  else if (myELM327.nb_rx_state != ELM_GETTING_MSG)
+    {myELM327.printError();}
+}
 
+void read_fuel_level()
+{
+    
+ float fuelTemp = myELM327.batteryVoltage();
+
+  if (myELM327.nb_rx_state == ELM_SUCCESS)
+  {
+    fuelLevel = (uint32_t)fuelTemp;
+   
+  }
+  else if (myELM327.nb_rx_state != ELM_GETTING_MSG)
+    {myELM327.printError();}
 }
