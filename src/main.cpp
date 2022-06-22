@@ -73,7 +73,7 @@ if (myELM327.nb_rx_state == ELM_SUCCESS)
   else if (myELM327.nb_rx_state != ELM_GETTING_MSG)
   {
     errorElm(); 
-    return 99.9;
+    return 99.9; //return
   }
 
 }
