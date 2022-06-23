@@ -1,5 +1,7 @@
 #include "BluetoothSerial.h"
 #include "ELMduino.h"
+#include <pid.h>
+
 BluetoothSerial SerialBT;
 ELM327 myELM327;
 
