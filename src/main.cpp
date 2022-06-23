@@ -39,8 +39,8 @@ request = "";
 if(Serial.available())
 {
   request = Serial.readString();
-  Serial.print("ECHO: "  + request);
-  SerialBT.print(request);
+  Serial.print("\nECHO: "  + request);
+  SerialBT.println(request);
   Serial.print("\nEnviando request...");
 }
 
@@ -61,8 +61,13 @@ while(SerialBT.available() > 0)
     
 
 }
+
+if(!BuildINString.isEmpty() || !BuildINString.equals(" "))
+{
 Serial.print("\nResposta: ");
 Serial.print(BuildINString);
+}
+
 
 delay(3000);
  
