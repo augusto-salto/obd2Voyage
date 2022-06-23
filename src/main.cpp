@@ -12,28 +12,36 @@ void setup()
 
 
   Serial.begin(115200);
-  SerialBT.begin("esp", true);
+  Serial.println("Iniciando o Bluetooth...");
+  SerialBT.end();
+  Serial.print(SerialBT.begin("esp", true));
+  SerialBT.clearWriteError();
+  SerialBT.flush();
+  //SerialBT.setPin("1234");
   Serial.println("Conectando...");
   SerialBT.connect("OBDII");
   
+  
 
-  while(!SerialBT.connected(100)){
+  while(!SerialBT.connected()){
     SerialBT.connect("OBDII");
     Serial.print(".");
   }
 
-  Serial.print("\n INICIO CAPTURA!!! >>>>>>>>>>>>>>>>>>>>\n");
   
 //myELM327.begin(Serial, false, 2000);
 
-Serial.println("Connected to ELM327");
+Serial.println("\n\nConnected to ELM327");
   
 }
 
 
 void loop()
 {
-BuildINString=""; 
+BuildINString = ""; 
+BuildINString.trim();
+BuildINString.clear();
+
 request = "";
 
 if(Serial.available())
@@ -54,22 +62,20 @@ while(SerialBT.available() > 0)
   
   inData=0;
   inChar=0;
-
-    inData = SerialBT.read();
-    inChar=char(inData);
-    BuildINString = BuildINString + inChar;
-    
-
+  inData = SerialBT.read();
+  inChar=char(inData);
+  BuildINString = BuildINString + inChar; 
 }
 
-if(!BuildINString.isEmpty() || !BuildINString.equals(" "))
+if( !BuildINString.isEmpty() && !BuildINString.equals(" ") && !BuildINString.equals(""))
 {
 Serial.print("\nResposta: ");
 Serial.print(BuildINString);
 }
 
 
-delay(3000);
+
+delay(50);
  
 }
 
