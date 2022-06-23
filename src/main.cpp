@@ -1,65 +1,70 @@
 #include "BluetoothSerial.h"
 #include "ELMduino.h"
 BluetoothSerial SerialBT;
+ELM327 myELM327;
 
-float rpm = 0;
-float fuelLevel = 0;
-float bateryVoltage = 0;
-float temperatura = 0;
-float posAcel = 0;
-byte message[] = {0x01, 0x00 };
-byte message2[] = {0x01, 0x05 };
-char buff[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-String teste;
-
-int receive = 0;
-
+byte inData;
+char inChar;
+String BuildINString = "";
+String request = "";
 void setup()
 {
 
 
   Serial.begin(115200);
   SerialBT.begin("esp", true);
-
-  SerialBT.connect("OBDII");
   Serial.println("Conectando...");
+  SerialBT.connect("OBDII");
+  
 
-  while(!SerialBT.connected()){
+  while(!SerialBT.connected(100)){
     SerialBT.connect("OBDII");
     Serial.print(".");
   }
-  
 
-  Serial.println("Connected to ELM327");
-  delay(1000);
-SerialBT.print("4849 4848");
-  delay(50);
-  Serial.print("\nResposta (SETUP): ");
-  Serial.print(SerialBT.read());
+  Serial.print("\n INICIO CAPTURA!!! >>>>>>>>>>>>>>>>>>>>\n");
+  
+//myELM327.begin(Serial, false, 2000);
+
+Serial.println("Connected to ELM327");
+  
 }
 
 
 void loop()
 {
+BuildINString=""; 
+request = "";
 
-SerialBT.print("4849 4853");
-delay(50);
-Serial.print("\nResposta (LOOP READ): ");
-Serial.print(SerialBT.read());
+if(Serial.available())
+{
+  request = Serial.readString();
+  Serial.print("ECHO: "  + request);
+  SerialBT.print(request);
+  Serial.print("\nEnviando request...");
+}
 
-delay(200);
-
-SerialBT.print("4849 4853");
-delay(50);
-Serial.print("\nResposta (LOOP READ String): ");
-Serial.print(SerialBT.readString());
-
-
+//SerialBT.println("AT SP 00"); // -----> funciona!
 
 
+while(SerialBT.available() > 0)
+{
+  //Serial.print("\nResposta:");
+  //Serial.print(SerialBT.read());
+  
+  inData=0;
+  inChar=0;
 
+    inData = SerialBT.read();
+    inChar=char(inData);
+    BuildINString = BuildINString + inChar;
+    
 
-delay(500); 
+}
+Serial.print("\nResposta: ");
+Serial.print(BuildINString);
+
+delay(3000);
  
 }
 
