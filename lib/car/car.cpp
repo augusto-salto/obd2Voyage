@@ -34,10 +34,11 @@ void    Car::set_rpm(String value)
     bufferB[0] = buffer[3];
     bufferB[1] = buffer[4];
 
-    int valueA, valueB;
-
-    valueA = atoi(bufferA);
-    valueB = atoi(bufferB);
+    uint8_t valueA, valueB;
+    //valueA = atoi(bufferA);
+    //valueB = atoi(bufferB);
+    valueA = (int) strtol(bufferA, 0, 16);
+    valueB = (int) strtol(bufferB, 0, 16);
 
     this->_rpm = (256 * valueA) + valueB;
     this->_rpm = this->_rpm / 4;
@@ -49,7 +50,7 @@ void    Car::set_rpm(String value)
 
 void    Car::set_speed(String value)
     {
-        
+        this->_vehicle_speed = value.toInt();
     }
 
 void    Car::set_acel_pos(String value)
