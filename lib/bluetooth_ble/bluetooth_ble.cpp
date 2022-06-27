@@ -107,10 +107,10 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
     }  else
     {
         countBle++;
-        if(countBle >= 2)
+        if(countBle >= 1)
         {
             Serial.print("Não encontrado! Reiniciando!");
-            vTaskDelay(pdMS_TO_TICKS(2000));
+            vTaskDelay(pdMS_TO_TICKS(500));
             ESP.restart();
         }
     }
@@ -193,9 +193,9 @@ void ble_send_command_at(String command)
 void selectResponse(String response)
 {
     int flag = false;
-    if (response.indexOf("AT") >= 0)
+    if (response.indexOf("AT") >= 0 && !flag)
     {
-        Serial.print("COMANDO AT");
+        
         onReceiveCommandAT(response);
         //flag = true;
     } 
@@ -235,55 +235,76 @@ void selectResponse(String response)
 
 void onReceiveCommandAT(String responseAt)
 {   
-    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+    
     if(responseAt.indexOf(AT_RESET_ALL) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Resetado com sucesso!");
+        xSemaphoreGive(xSerial_semaphore);
     } 
     else if(responseAt.indexOf(AT_CABECALHO_ON) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Cabecalho ligado! ");
+        xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_CABECALHO_OFF) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Cabecalho desligado! ");
+        xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_BATERY_VOLTAGE) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Tensao da bateria: ");
         int index = responseAt.lastIndexOf(AT_BATERY_VOLTAGE);
         Serial.print(responseAt.substring(index + 5));
         car.set_batery_voltage(responseAt.substring(index + 5));
+        xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_DEFAULT_RESTORE) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Restaurado para o padrao de fabrica!");
+        xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_ECHO_OFF) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Echo OFF! ");
+        xSemaphoreGive(xSerial_semaphore);
     }
     else if(responseAt.indexOf(AT_ECHO_ON) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Echo ON! ");
+        xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_CABECALHO_ON) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Echo on!");
+        xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_FAST_RESET) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Fast reset!");
+        xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_PROTOCOLO_AUTO) >= 0)
     {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Protocolo automatico definido com sucesso!");
+        xSemaphoreGive(xSerial_semaphore);
+
     } else if(responseAt.indexOf(AT_BATERY_VOLTAGE) >= 0)
     {
         int indexResp = responseAt.indexOf(AT_BATERY_VOLTAGE + 5);
         car.set_batery_voltage(responseAt.substring(indexResp));
     }
-    xSemaphoreGive(xSerial_semaphore);
+    
 }
 
 void onReceivedPid(String responsePID)
@@ -386,21 +407,26 @@ void ble_check_comm()
     
     if(car.is_connecting())
    {
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
     Serial.print("\nCONECTANDO...");
+    xSemaphoreGive(xSerial_semaphore);
      
    }else if(!car.is_running())
    {
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
     Serial.print("\nVEICULO NAO ENCONTRADO!");
+    xSemaphoreGive(xSerial_semaphore);
      
    }else if(car.is_running())
    {
        // ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1");
-      Serial.print("VEÍCULO CONECTADO!"); 
+     // Serial.print("VEÍCULO CONECTADO!"); 
    }
 
    if(car.is_connecting() || !car.is_running())
    {
     ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1"); // TESTE DE COMUNICAÇÃO
+    
      
    }
     
