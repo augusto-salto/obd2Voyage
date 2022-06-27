@@ -126,30 +126,23 @@ void ble_client_loop() {
 
   if (doConnect == true) {
     if (connectToServer()) {
-      Serial.println("\nBLE Conectado!");
-      ble_send_command_at(AT_FAST_RESET);
-      delay(100);
-      ble_send_command_at(AT_CABECALHO_OFF);
-      delay(100);
-      ble_send_command_at(AT_ECHO_OFF);
-      delay(100);
-      ble_send_command_at(AT_PROTOCOLO_AUTO);
-      delay(100);
-      ble_send_command_at(AT_BATERY_VOLTAGE);
-      delay(100);
-      
+     
+        ble_at_config();
+
     } else {
       Serial.println("\nBle não conectado!");
     }
     doConnect = false;
   }
 
+  
+
   // If we are connected to a peer BLE Server, update the characteristic each time we are reached
   // with the current time since boot.
   if (connected) {
     //String newValue = "AT SP 00";
     //Serial.println("\nEnviando: " + newValue);
-    
+    ble_check_comm();
     // Set the characteristic's value to be the array of bytes that is actually a string.
     //pRemoteCharacteristicTx->writeValue(newValue.c_str(), newValue.length());
     //Serial.print("Perdeu a comunicação!");
@@ -244,6 +237,7 @@ void onReceiveCommandAT(String responseAt)
         Serial.print("\nELM327: Tensao da bateria: ");
         int index = responseAt.lastIndexOf(AT_BATERY_VOLTAGE);
         Serial.print(responseAt.substring(index + 5));
+        car.set_batery_voltage(responseAt.substring(index + 5));
     }
      else if(responseAt.indexOf(AT_DEFAULT_RESTORE) >= 0)
     {
@@ -278,9 +272,6 @@ void onReceiveCommandAT(String responseAt)
 
 void onReceivedPid(String responsePID)
 {
-    // Especificar qual a resposta... ex: 41 00 
-    //Serial.print("\nRESPONSE PID: ");
-    //Serial.print(responsePID);
 
     int index = responsePID.indexOf("41") + 3;
     int endIndex = index + 2;
@@ -289,17 +280,17 @@ void onReceivedPid(String responsePID)
 
     if(bufferPid.indexOf(SUPORTED_PIDS_01_20) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_01_20 + PID_LENGTH);
+        int indexResp = responsePID.indexOf(SUPORTED_PIDS_01_20) + PID_LENGTH;
         car.set_suported_pids_01(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(STATUS_DTC) >= 0)
     {
-        int indexResp = responsePID.indexOf(STATUS_DTC + PID_LENGTH);
+        int indexResp = responsePID.indexOf(STATUS_DTC) + PID_LENGTH;
         car.set_status_dts(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(TEMP_ENGINE) >= 0)
     {
-        int indexResp = responsePID.indexOf(TEMP_ENGINE + PID_LENGTH);
+        int indexResp = responsePID.indexOf(TEMP_ENGINE) + PID_LENGTH;
         car.set_temp_01(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(RPM_ENGINE) >= 0)
@@ -310,62 +301,62 @@ void onReceivedPid(String responsePID)
     }
     else if(bufferPid.indexOf(VEHICLE_SPEED) >= 0)
     {
-         int indexResp = responsePID.indexOf(VEHICLE_SPEED + PID_LENGTH);
+         int indexResp = responsePID.indexOf(VEHICLE_SPEED) + PID_LENGTH;
         car.set_speed(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(POS_ACEL) >= 0)
     {
-         int indexResp = responsePID.indexOf(POS_ACEL + PID_LENGTH);
+         int indexResp = responsePID.indexOf(POS_ACEL) + PID_LENGTH;
         car.set_acel_pos(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(SUPORTED_PIDS_21_40) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_21_40 + PID_LENGTH);
+        int indexResp = responsePID.indexOf(SUPORTED_PIDS_21_40) + PID_LENGTH;
         car.set_suported_pids_21(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(FUEL_TANK_LEVEL_INPUT) >= 0)
     {
-        int indexResp = responsePID.indexOf(FUEL_TANK_LEVEL_INPUT + PID_LENGTH);
+        int indexResp = responsePID.indexOf(FUEL_TANK_LEVEL_INPUT) + PID_LENGTH;
         car.set_fuel_level(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(SUPORTED_PIDS_41_60) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_41_60 + PID_LENGTH);
+        int indexResp = responsePID.indexOf(SUPORTED_PIDS_41_60) + PID_LENGTH;
         car.set_suported_pids_41(responsePID.substring(indexResp));
     }
     else if(bufferPid.indexOf(VOLTAGE_CONTROL_MODULE) >= 0)
     {
-        int indexResp = responsePID.indexOf(VOLTAGE_CONTROL_MODULE + PID_LENGTH);
+        int indexResp = responsePID.indexOf(VOLTAGE_CONTROL_MODULE) + PID_LENGTH;
         car.set_voltage(responsePID.substring(indexResp));
     }
      else if(bufferPid.indexOf(TEMP_AMBIENTE) >= 0)
     {
-        int indexResp = responsePID.indexOf(TEMP_AMBIENTE + PID_LENGTH);
+        int indexResp = responsePID.indexOf(TEMP_AMBIENTE) + PID_LENGTH;
         car.set_ambient_temp(responsePID.substring(indexResp));
     }
      else if(bufferPid.indexOf(FUEL_TYPE) >= 0)
     {
-        int indexResp = responsePID.indexOf(FUEL_TYPE + PID_LENGTH);
+        int indexResp = responsePID.indexOf(FUEL_TYPE) + PID_LENGTH;
         car.set_fuel_type(responsePID.substring(indexResp));
     }
      else if(bufferPid.indexOf(FUEL_RATE) >= 0)
     {
-        int indexResp = responsePID.indexOf(FUEL_RATE + PID_LENGTH);
+        int indexResp = responsePID.indexOf(FUEL_RATE) + PID_LENGTH;
         car.set_fuel_rate(responsePID.substring(indexResp));
     }
      else if(bufferPid.indexOf(SUPORTED_PIDS_61_80) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_61_80 + PID_LENGTH);
+        int indexResp = responsePID.indexOf(SUPORTED_PIDS_61_80) + PID_LENGTH;
         car.set_suported_pids_61(responsePID.substring(indexResp));
     }
      else if(bufferPid.indexOf(TEMP_ENGINE_COOLANT) >= 0)
     {
-        int indexResp = responsePID.indexOf(TEMP_ENGINE_COOLANT + PID_LENGTH);
+        int indexResp = responsePID.indexOf(TEMP_ENGINE_COOLANT) + PID_LENGTH;
         car.set_coolant_temp(responsePID.substring(indexResp));
     }
      else if(bufferPid.indexOf(ODOMETER) >= 0)
     {
-        int indexResp = responsePID.indexOf(ODOMETER + PID_LENGTH);
+        int indexResp = responsePID.indexOf(ODOMETER) + PID_LENGTH;
         car.set_odometer(responsePID.substring(indexResp));
     }
     
@@ -374,10 +365,61 @@ void onReceivedPid(String responsePID)
 
 }
 
-void ble_request_pid(String service, String pid, String qtdResponse = "")
+void ble_check_comm()
 {
+    if(car.is_connecting())
+   {
+    Serial.print("\nCONECTANDO...");
+   }else if(!car.is_running())
+   {
+    Serial.print("\nVEICULO NAO ENCONTRADO!");
+   }else 
+
+   if(car.is_running())
+   {
+        ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
+   }
+
+   if(car.is_connecting() || !car.is_running())
+   {
+    ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1"); // TESTE DE COMUNICAÇÃO
+   }
 
 }
 
 
 
+void ble_at_config()
+{
+    Serial.println("\nBLE Conectado!");
+      ble_send_command_at(AT_FAST_RESET);
+      delay(100);
+      ble_send_command_at(AT_CABECALHO_OFF);
+      delay(100);
+      ble_send_command_at(AT_ECHO_OFF);
+      delay(100);
+      ble_send_command_at(AT_PROTOCOLO_AUTO);
+      delay(100);
+      ble_send_command_at(AT_BATERY_VOLTAGE);
+      delay(100);
+}
+
+
+void ble_get_real_time_data()
+{
+    ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
+    ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
+    ble_send_pid(SERVICE_01, POS_ACEL, "1");
+}
+
+void ble_get_data()
+{
+    ble_send_pid(SERVICE_01, TEMP_ENGINE, "1");
+    ble_send_pid(SERVICE_01, FUEL_TANK_LEVEL_INPUT, "1");
+    ble_send_pid(SERVICE_01, VOLTAGE_CONTROL_MODULE, "1");
+    ble_send_pid(SERVICE_01, TEMP_AMBIENTE, "1");
+    ble_send_pid(SERVICE_01, FUEL_TYPE, "1");
+    ble_send_pid(SERVICE_01, FUEL_RATE, "1");
+    ble_send_pid(SERVICE_01, ODOMETER, "1");
+    ble_send_command_at(AT_BATERY_VOLTAGE);
+}

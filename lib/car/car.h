@@ -16,6 +16,8 @@
         String  _suported_21_40 = "";
         float   _voltage_ecu = 0.0;
         int     _temp_ambiente = 0;
+        int     _fuel_level = 0;
+        String  _suported_pids_41_60 = "";
         String  _fuel_type = "";
         float   _fuel_rate = 0.0;
         String  _suported_61_80;

@@ -8,7 +8,7 @@
 
 
 #define bleServerName "OBDBLE"
-#define DEBUG 1
+#define DEBUG 0
 
 #define SERVICE_UUID                                     "0000fff0-0000-1000-8000-00805f9b34fb" 
 
@@ -26,8 +26,10 @@ void ble_send_pid(String service, String pid, String qtd_response = "");
 void onReceiveCommandAT(String responseAt);
 void onReceivedPid(String responsePID);
 
-
-
+void ble_at_config();
+void ble_get_real_time_data();
+void ble_get_data();
+void ble_check_comm();
 
 
 
