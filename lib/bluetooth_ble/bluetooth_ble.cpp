@@ -99,7 +99,12 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
       doConnect = true;
       doScan = true;
 
-    } // Found our server
+    }  else
+    {
+        Serial.print("DISPOSITIVO NÃO ENCONTRADO! REINICIANDO....");
+        delay(1000);
+        ESP.restart();
+    }
   } // onResult
 }; // MyAdvertisedDeviceCallbacks
 
@@ -126,7 +131,7 @@ void ble_client_loop() {
       delay(100);
       ble_send_command_at(AT_CABECALHO_OFF);
       delay(100);
-      ble_send_command_at(AT_ECHO_ON);
+      ble_send_command_at(AT_ECHO_OFF);
       delay(100);
       ble_send_command_at(AT_PROTOCOLO_AUTO);
       delay(100);
@@ -166,13 +171,13 @@ void ble_client_loop() {
   delay(500); // Delay a second between loops.
 } 
 
-void ble_send_pid(String service, String pid)
+void ble_send_pid(String service, String pid, String qtd_response)
 {
     if(connected)
     {
-        String buff_send = service + pid;
+        String buff_send = service + pid + qtd_response;
         buff_send += '\r';
-        Serial.print("\nEnviando: " + buff_send);
+        //Serial.print("\nEnviando: " + buff_send);
         pRemoteCharacteristicTx->writeValue(buff_send.c_str(), buff_send.length());
     }
     
@@ -185,7 +190,7 @@ void ble_send_command_at(String command)
     {
         String buff_send = command;
         buff_send += '\r';
-        Serial.print("\nEnviando: " + buff_send);
+       // Serial.print("\nEnviando: " + buff_send);
         pRemoteCharacteristicTx->writeValue(buff_send.c_str(), buff_send.length());
     }
 
@@ -193,21 +198,6 @@ void ble_send_command_at(String command)
 
 void selectResponse(String response)
 {
-    // BUFFER
-    /*response.trim();
-    response.replace(" ", "");
-    char buffer[response.length() + 1];
-    response.toCharArray(buffer, response.length() + 1);
-
-    Serial.print("\n >>>>>>> BUFFER DE RESPOSTA: ");
-    for (int i = 0; i<response.length(); i++)
-    {
-        Serial.print("\nBuffer[");
-        Serial.print(i);
-        Serial.print("] :");
-        Serial.print(buffer[i]);
-    }
-    Serial.print("\n >>>>>>>> FIM DO BUFFER");*/
 
     if (response.indexOf("AT") >= 0)
     {
@@ -215,12 +205,23 @@ void selectResponse(String response)
     } 
     else if(response.indexOf("41") >= 0)
     {
+        car.set_running(true);
+        car.set_connecting(false);
         onReceivedPid(response);
     } 
-    else 
+    
+        if(response.indexOf(AT_SEARCHING) >= 0)
     {
-        Serial.print("\nComando invalido!");
+        car.set_connecting(true);
+        car.set_running(false);
+    } 
+    
+        if(response.indexOf(AT_UNABLE_TO_CONECT) >= 0)
+    {
+        car.set_running(false);
+        car.set_connecting(false);
     }
+
 
 }
 
@@ -278,9 +279,13 @@ void onReceiveCommandAT(String responseAt)
 void onReceivedPid(String responsePID)
 {
     // Especificar qual a resposta... ex: 41 00 
-    int index = responsePID.indexOf("41") + 3;  // 3 OU 4 TODO!
+    //Serial.print("\nRESPONSE PID: ");
+    //Serial.print(responsePID);
+
+    int index = responsePID.indexOf("41") + 3;
     int endIndex = index + 2;
     String bufferPid = responsePID.substring(index, endIndex);
+
 
     if(bufferPid.indexOf(SUPORTED_PIDS_01_20) >= 0)
     {
@@ -299,8 +304,9 @@ void onReceivedPid(String responsePID)
     }
     else if(bufferPid.indexOf(RPM_ENGINE) >= 0)
     {
-        int indexResp = responsePID.indexOf(RPM_ENGINE + PID_LENGTH);
+        int indexResp = responsePID.indexOf(RPM_ENGINE)  + PID_LENGTH;
         car.set_rpm(responsePID.substring(indexResp));
+
     }
     else if(bufferPid.indexOf(VEHICLE_SPEED) >= 0)
     {
@@ -365,6 +371,11 @@ void onReceivedPid(String responsePID)
     
     
 
+
+}
+
+void ble_request_pid(String service, String pid, String qtdResponse = "")
+{
 
 }
 

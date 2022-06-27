@@ -22,6 +22,8 @@
         int     _temp_eng_coolant = 0;
         int     _odometer = 0;
         float   _batery_voltage = 0.0;
+        bool    _searching = false;
+        bool    _unable = true;
     
     public:
         void init_car();
@@ -41,6 +43,8 @@
         int     get_coolant_temp();
         int     get_odometer();
         float   get_batery_volt();
+        bool    is_connecting();
+        bool    is_running();
 
         void    set_suported_pids_01(String value);
         void    set_status_dts(String value);
@@ -59,6 +63,8 @@
         void    set_coolant_temp(String value);
         void    set_odometer(String value);
         void    set_batery_voltage(String value);
+        void    set_connecting(bool connecting);
+        void    set_running(bool running);
 
 };
 

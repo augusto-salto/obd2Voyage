@@ -1,28 +1,28 @@
 #ifndef PID_H
 #define PID_H
 
-#define PID_LENGTH 4
+#define PID_LENGTH 2
 //SERVICES
 #define SERVICE_01  "01"
 #define SERVICE_02  "02"
 
 // PID´S - SERVICE 01
-#define SUPORTED_PIDS_01_20     "00 1"
-#define STATUS_DTC              "01 1"
-#define TEMP_ENGINE             "05 1"
-#define RPM_ENGINE              "0C 1"
-#define VEHICLE_SPEED           "0D 1"
-#define POS_ACEL                "11 1"
-#define SUPORTED_PIDS_21_40     "20 1"
-#define FUEL_TANK_LEVEL_INPUT   "2F 1"
-#define SUPORTED_PIDS_41_60     "40 1"
-#define VOLTAGE_CONTROL_MODULE  "42 1"
-#define TEMP_AMBIENTE           "46 1"
-#define FUEL_TYPE               "51 1"
-#define FUEL_RATE               "5E 1"
-#define SUPORTED_PIDS_61_80     "60 1"
-#define TEMP_ENGINE_COOLANT     "67 1"
-#define ODOMETER                "A6 1"
+#define SUPORTED_PIDS_01_20     "00"
+#define STATUS_DTC              "01"
+#define TEMP_ENGINE             "05"
+#define RPM_ENGINE              "0C"
+#define VEHICLE_SPEED           "0D"
+#define POS_ACEL                "11"
+#define SUPORTED_PIDS_21_40     "20"
+#define FUEL_TANK_LEVEL_INPUT   "2F"
+#define SUPORTED_PIDS_41_60     "40"
+#define VOLTAGE_CONTROL_MODULE  "42"
+#define TEMP_AMBIENTE           "46"
+#define FUEL_TYPE               "51"
+#define FUEL_RATE               "5E"
+#define SUPORTED_PIDS_61_80     "60"
+#define TEMP_ENGINE_COOLANT     "67"
+#define ODOMETER                "A6"
 
 
 // AT COMANDS
@@ -37,7 +37,10 @@
 #define AT_BATERY_VOLTAGE   "AT RV"
 
 
+//AT RESPONSES
 
+#define AT_SEARCHING "SEARCHING..."
+#define AT_UNABLE_TO_CONECT "UNABLE TO CONNECT"
 
 
 
