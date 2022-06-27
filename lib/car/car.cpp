@@ -75,15 +75,30 @@ void    Car::set_speed(String value)
 
 void    Car::set_acel_pos(String value)
     {
+      //  xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+      //  Serial.print("\nVALUE POS: ");
+      //  Serial.print(value);
+      //  xSemaphoreGive(xSerial_semaphore);
+    
     value.trim(); 
     char buffer[value.length() + 1];
     value.toCharArray(buffer, value.length() + 1);
     int valueInt = (int) strtol(buffer, 0, 16);
-    this->_pos_acel = (100/255) * valueInt;
+    
+   // xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+   //     Serial.print("\nVALUE int: ");
+    //    Serial.print(valueInt);
+    //    xSemaphoreGive(xSerial_semaphore);
+    // xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+      // Serial.print("\ntemp: ");
+        //Serial.print(temp);
+        //xSemaphoreGive(xSerial_semaphore);
+    this->_pos_acel = 0.39215686 * valueInt;
+    
 
     xSemaphoreTake(xSerial_semaphore, portMAX_DELAY ); 
     Serial.print("\nPOS ACEL: ");
-    Serial.print(this->_vehicle_speed);
+    Serial.print(this->_pos_acel);
     Serial.print("%");
     xSemaphoreGive(xSerial_semaphore);
 

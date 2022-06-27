@@ -10,6 +10,8 @@
 #define bleServerName "OBDBLE"
 #define DEBUG 0
 
+#define REAL_TIME_DELAY 80
+
 #define SERVICE_UUID                                     "0000fff0-0000-1000-8000-00805f9b34fb" 
 
 #define CHARACTERISTIC_1                                 "0000fff1-0000-1000-8000-00805f9b34fb"

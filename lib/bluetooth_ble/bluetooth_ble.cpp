@@ -19,8 +19,10 @@ static void notifyCallback(
   uint8_t* pData,
   size_t length,
   bool isNotify) {
+   // xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
     //Serial.print("\nRecebido: ");
     //Serial.print((char*)pData);
+    //xSemaphoreGive(xSerial_semaphore);
     xSemaphoreTake(xBle_semaphore, portMAX_DELAY ); 
     selectResponse((char*)pData);
     xSemaphoreGive(xBle_semaphore);
@@ -193,34 +195,40 @@ void ble_send_command_at(String command)
 
 void selectResponse(String response)
 {
-
-    if (response.indexOf("AT") >= 0)
+    int flag = false;
+    if (response.indexOf("AT") >= 0 && flag == false)
     {
         onReceiveCommandAT(response);
+        //flag = true;
     } 
-    else if(response.indexOf("41") >= 0)
+
+    if(response.indexOf("41") >= 0&& flag == false)
     {
         car.set_running(true);
         car.set_connecting(false);
         onReceivedPid(response);
+        //flag = true;
     } 
     
-        else if(response.indexOf(AT_SEARCHING) >= 0)
+    if(response.indexOf(AT_SEARCHING) >= 0 && flag == false)
     {
         car.set_connecting(true);
         car.set_running(false);
+        //flag = true;
     } 
-    
-        else if(response.indexOf(AT_UNABLE_TO_CONECT) >= 0)
+    if(response.indexOf(AT_UNABLE_TO_CONECT) >= 0 && flag == false)
     {
         car.set_running(false);
         car.set_connecting(false);
-    }else
+        //flag = true;
+    }
+    if(flag == false)
     {
-        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
-        Serial.print("\nResposta nao tratada: ");
-        Serial.print(response);
-        xSemaphoreGive(xSerial_semaphore);
+        //xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+       // Serial.print("\nResposta nao tratada: ");
+       // Serial.print(response);
+        //xSemaphoreGive(xSerial_semaphore);
+        //flag = true;
     }
 
 
@@ -375,24 +383,27 @@ void onReceivedPid(String responsePID)
 
 void ble_check_comm()
 {
+    
     if(car.is_connecting())
    {
     Serial.print("\nCONECTANDO...");
+     
    }else if(!car.is_running())
    {
     Serial.print("\nVEICULO NAO ENCONTRADO!");
-   }else 
-
-   if(car.is_running())
+     
+   }else if(car.is_running())
    {
-        ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
+       // ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1");
+         
    }
 
    if(car.is_connecting() || !car.is_running())
    {
     ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1"); // TESTE DE COMUNICAÇÃO
+     
    }
-
+    
 }
 
 
@@ -415,9 +426,14 @@ void ble_at_config()
 
 void ble_get_real_time_data()
 {
+    
     ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
-    ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
+  vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
+ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
+   vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
     ble_send_pid(SERVICE_01, POS_ACEL, "1");
+    vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
+    
 }
 
 void ble_get_data()
