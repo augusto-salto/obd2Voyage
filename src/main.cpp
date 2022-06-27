@@ -9,14 +9,15 @@ xSerial_semaphore = xSemaphoreCreateMutex();
 xHardwareSerial_semaphore = xSemaphoreCreateMutex();
 xBle_semaphore = xSemaphoreCreateMutex();
 
-    Serial.begin(115200);
-    ble_client_setup();
+Serial.begin(115200);
+vTask_ble_start();
+   
 }
 
 void loop()
 {
-    ble_client_loop();
-    delay(500);
-   
+    
+ 
+   vTaskDelay(pdMS_TO_TICKS(10));
 
 }

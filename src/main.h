@@ -12,6 +12,7 @@
 
 // TAREFAS
 #include "xtask_real_time_data.h"
+#include "xtask_ble.h"
 
 //FILAS
 QueueHandle_t xQueue_Nivel;
@@ -24,7 +25,7 @@ SemaphoreHandle_t xBle_semaphore;
 
 //Handle
 extern TaskHandle_t handle_real_time_data;
-
+extern TaskHandle_t handle_ble;
 
 extern Car car;
 

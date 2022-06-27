@@ -19,8 +19,8 @@ static void notifyCallback(
   uint8_t* pData,
   size_t length,
   bool isNotify) {
-    Serial.print("\nRecebido: ");
-    Serial.print((char*)pData);
+    //Serial.print("\nRecebido: ");
+    //Serial.print((char*)pData);
     selectResponse((char*)pData);
     
 }
@@ -101,9 +101,9 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 
     }  else
     {
-        Serial.print("DISPOSITIVO NÃO ENCONTRADO! REINICIANDO....");
-        delay(1000);
-        ESP.restart();
+        //Serial.print("DISPOSITIVO NAO ENCONTRADO! REINICIANDO....");
+        //delay(1000);
+        //ESP.restart();
     }
   } // onResult
 }; // MyAdvertisedDeviceCallbacks
@@ -408,8 +408,8 @@ void ble_at_config()
 void ble_get_real_time_data()
 {
     ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
-    ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
-    ble_send_pid(SERVICE_01, POS_ACEL, "1");
+    //ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
+    //ble_send_pid(SERVICE_01, POS_ACEL, "1");
 }
 
 void ble_get_data()

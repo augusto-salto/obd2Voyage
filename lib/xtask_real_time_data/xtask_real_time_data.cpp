@@ -8,6 +8,11 @@ void xTask_real_time( void *pvParameters )
 
     while (1)
     {
+        if(car.is_running())
+        {
+            ble_get_real_time_data();
+        }
+        
         vTaskDelay(pdMS_TO_TICKS(100));
     }
     

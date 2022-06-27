@@ -6,27 +6,12 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include <Arduino.h>
+#include "bluetooth_ble.h"
 
+extern Car car;
 
 void xTask_real_time( void *pvParameters );
 void vTask_real_time_start();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
