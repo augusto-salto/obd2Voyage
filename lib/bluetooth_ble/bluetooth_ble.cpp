@@ -267,6 +267,10 @@ void onReceiveCommandAT(String responseAt)
      else if(responseAt.indexOf(AT_PROTOCOLO_AUTO) >= 0)
     {
         Serial.print("\nELM327: Protocolo automatico definido com sucesso!");
+    } else if(responseAt.indexOf(AT_BATERY_VOLTAGE) >= 0)
+    {
+        int indexResp = responseAt.indexOf(AT_BATERY_VOLTAGE + 5);
+        car.set_batery_voltage(responseAt.substring(indexResp));
     }
 
 }

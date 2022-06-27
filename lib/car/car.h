@@ -7,24 +7,23 @@
  class Car
 {
     private:
-        String _suported_01_20 = "";
-        String _status_dtc = "";
-        int _temp_engine = 0;
-        int _rpm = 0;
-        int _vehicle_speed = 0;
-        int _pos_acel = 0;
-        String _suported_21_40 = "";
-        float _voltage_ecu = 0.0;
-        int temp_ambiente = 0;
-        String _fuel_type = "";
-        float _fuel_rate = 0.0;
-        String _suported_61_80;
-        int temp_eng_coolant = 0;
-        int odometer = 0;
+        String  _suported_01_20 = "";
+        String  _status_dtc = "";
+        int     _temp_engine = 0;
+        int     _rpm = 0;
+        int     _vehicle_speed = 0;
+        int     _pos_acel = 0;
+        String  _suported_21_40 = "";
+        float   _voltage_ecu = 0.0;
+        int     _temp_ambiente = 0;
+        String  _fuel_type = "";
+        float   _fuel_rate = 0.0;
+        String  _suported_61_80;
+        int     _temp_eng_coolant = 0;
+        int     _odometer = 0;
+        float   _batery_voltage = 0.0;
     
     public:
-        String test = "";
-
         void init_car();
 
         String  get_suported_pids_01();
@@ -41,6 +40,7 @@
         String  get_suported_pids_61();
         int     get_coolant_temp();
         int     get_odometer();
+        float   get_batery_volt();
 
         void    set_suported_pids_01(String value);
         void    set_status_dts(String value);
@@ -58,6 +58,7 @@
         void    set_suported_pids_61(String value);
         void    set_coolant_temp(String value);
         void    set_odometer(String value);
+        void    set_batery_voltage(String value);
 
 };
 
