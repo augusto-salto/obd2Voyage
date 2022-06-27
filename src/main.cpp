@@ -1,29 +1,17 @@
 #include "main.h"
 
-BtObd obdComm;
 
 
 void setup()
 {
-
-obdComm.obd_init();
-delay(500);
-
- 
-  
+    Serial.begin(115200);
+    ble_client_setup();
 }
-
 
 void loop()
 {
+    ble_client_loop();
+    delay(500);
+    
 
-obdComm.obd_send_pid(SERVICE_01, TEMP_ENGINE);
-delay(500);
-obdComm.obd_read_response();
-delay(500);
-obdComm.obd_send_pid(SERVICE_01, VOLTAGE_CONTROL_MODULE);
-delay(500);
-
- 
 }
-
