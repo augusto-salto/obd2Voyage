@@ -21,7 +21,9 @@ static void notifyCallback(
   bool isNotify) {
     //Serial.print("\nRecebido: ");
     //Serial.print((char*)pData);
+    xSemaphoreTake(xBle_semaphore, portMAX_DELAY ); 
     selectResponse((char*)pData);
+    xSemaphoreGive(xBle_semaphore);
     
 }
 
@@ -203,16 +205,22 @@ void selectResponse(String response)
         onReceivedPid(response);
     } 
     
-        if(response.indexOf(AT_SEARCHING) >= 0)
+        else if(response.indexOf(AT_SEARCHING) >= 0)
     {
         car.set_connecting(true);
         car.set_running(false);
     } 
     
-        if(response.indexOf(AT_UNABLE_TO_CONECT) >= 0)
+        else if(response.indexOf(AT_UNABLE_TO_CONECT) >= 0)
     {
         car.set_running(false);
         car.set_connecting(false);
+    }else
+    {
+        xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+        Serial.print("\nResposta nao tratada: ");
+        Serial.print(response);
+        xSemaphoreGive(xSerial_semaphore);
     }
 
 
@@ -408,8 +416,8 @@ void ble_at_config()
 void ble_get_real_time_data()
 {
     ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
-    //ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
-    //ble_send_pid(SERVICE_01, POS_ACEL, "1");
+    ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
+    ble_send_pid(SERVICE_01, POS_ACEL, "1");
 }
 
 void ble_get_data()

@@ -13,7 +13,7 @@ void xTask_real_time( void *pvParameters )
             ble_get_real_time_data();
         }
         
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
     
 

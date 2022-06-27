@@ -16,7 +16,7 @@
 #define DESCRIPTOR_1                                     "00002902-0000-1000-8000-00805f9b34fb"
 #define CHARACTERISTIC_2                                 "0000fff2-0000-1000-8000-00805f9b34fb" 
 
-
+extern SemaphoreHandle_t xBle_semaphore;
 
 void ble_client_loop();
 void ble_client_setup();

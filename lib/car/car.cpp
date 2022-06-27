@@ -50,8 +50,10 @@ void    Car::set_rpm(String value)
     this->_rpm = (256 * valueA) + valueB;
     this->_rpm = this->_rpm / 4;
 
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY );
     Serial.print("\nRPM: ");
     Serial.print(this->_rpm);
+    xSemaphoreGive(xSerial_semaphore);
 
     }
 
@@ -64,6 +66,11 @@ void    Car::set_speed(String value)
     int valueInt = (int) strtol(buffer, 0, 16);
     this->_vehicle_speed = valueInt;
 
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY ); 
+    Serial.print("\nVELOCIDADE: ");
+    Serial.print(this->_vehicle_speed);
+    Serial.print("Km/H");
+    xSemaphoreGive(xSerial_semaphore);
     }
 
 void    Car::set_acel_pos(String value)
@@ -73,6 +80,12 @@ void    Car::set_acel_pos(String value)
     value.toCharArray(buffer, value.length() + 1);
     int valueInt = (int) strtol(buffer, 0, 16);
     this->_pos_acel = (100/255) * valueInt;
+
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY ); 
+    Serial.print("\nPOS ACEL: ");
+    Serial.print(this->_vehicle_speed);
+    Serial.print("%");
+    xSemaphoreGive(xSerial_semaphore);
 
     }
 
