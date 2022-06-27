@@ -428,9 +428,9 @@ void ble_get_real_time_data()
 {
     
     ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
-  vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
-ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
-   vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
+    vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
+    ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
+    vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
     ble_send_pid(SERVICE_01, POS_ACEL, "1");
     vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
     
