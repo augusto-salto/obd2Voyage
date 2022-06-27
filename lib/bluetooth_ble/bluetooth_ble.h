@@ -20,6 +20,7 @@
 
 void ble_client_loop();
 void ble_client_setup();
+
 void selectResponse(String response);
 void ble_send_command_at(String command);
 void ble_send_pid(String service, String pid, String qtd_response = "");
