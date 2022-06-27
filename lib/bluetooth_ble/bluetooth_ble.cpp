@@ -13,6 +13,7 @@ static BLERemoteCharacteristic* pRemoteCharacteristicRx;
 static BLERemoteCharacteristic* pRemoteCharacteristicTx;
 static BLEAdvertisedDevice* myDevice;
 
+uint8_t countBle = 0;
 // ******************************************************************** Callback de recebimento de notificação
 static void notifyCallback(
   BLERemoteCharacteristic* pBLERemoteCharacteristic,
@@ -20,9 +21,9 @@ static void notifyCallback(
   size_t length,
   bool isNotify) {
    // xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
-    //Serial.print("\nRecebido: ");
-    //Serial.print((char*)pData);
-    //xSemaphoreGive(xSerial_semaphore);
+   // Serial.print("\nRecebido: ");
+   // Serial.print((char*)pData);
+   // xSemaphoreGive(xSerial_semaphore);
     xSemaphoreTake(xBle_semaphore, portMAX_DELAY ); 
     selectResponse((char*)pData);
     xSemaphoreGive(xBle_semaphore);
@@ -105,12 +106,16 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 
     }  else
     {
-        //Serial.print("DISPOSITIVO NAO ENCONTRADO! REINICIANDO....");
-        //delay(1000);
-        //ESP.restart();
+        countBle++;
+        if(countBle >= 2)
+        {
+            Serial.print("Não encontrado! Reiniciando!");
+            vTaskDelay(pdMS_TO_TICKS(2000));
+            ESP.restart();
+        }
     }
-  } // onResult
-}; // MyAdvertisedDeviceCallbacks
+  } 
+}; 
 
 
 void ble_client_setup() {
@@ -123,6 +128,7 @@ void ble_client_setup() {
   pBLEScan->setWindow(449);
   pBLEScan->setActiveScan(true);
   pBLEScan->start(5, false);
+  
 } 
 
 
@@ -132,24 +138,15 @@ void ble_client_loop() {
     if (connectToServer()) {
      
         ble_at_config();
-
+        vTaskDelay(pdMS_TO_TICKS(1000));
     } else {
       Serial.println("\nBle não conectado!");
     }
     doConnect = false;
   }
 
-  
-
-  // If we are connected to a peer BLE Server, update the characteristic each time we are reached
-  // with the current time since boot.
   if (connected) {
-    //String newValue = "AT SP 00";
-    //Serial.println("\nEnviando: " + newValue);
     ble_check_comm();
-    // Set the characteristic's value to be the array of bytes that is actually a string.
-    //pRemoteCharacteristicTx->writeValue(newValue.c_str(), newValue.length());
-    //Serial.print("Perdeu a comunicação!");
 
 #if DEBUG == 1
     if(Serial.available()){
@@ -160,12 +157,13 @@ void ble_client_loop() {
     }
 #endif
 
-  }else if(doScan){
+  }else if(doScan)
+  {
     Serial.print("\nPerdeu a comunicação!");
-    BLEDevice::getScan()->start(0);  // this is just example to start scan after disconnect, most likely there is better way to do it in arduino
+    BLEDevice::getScan()->start(0);  
   }
   
-  delay(500); // Delay a second between loops.
+  delay(500); 
 } 
 
 void ble_send_pid(String service, String pid, String qtd_response)
@@ -174,7 +172,6 @@ void ble_send_pid(String service, String pid, String qtd_response)
     {
         String buff_send = service + pid + qtd_response;
         buff_send += '\r';
-        //Serial.print("\nEnviando: " + buff_send);
         pRemoteCharacteristicTx->writeValue(buff_send.c_str(), buff_send.length());
     }
     
@@ -196,8 +193,9 @@ void ble_send_command_at(String command)
 void selectResponse(String response)
 {
     int flag = false;
-    if (response.indexOf("AT") >= 0 && flag == false)
+    if (response.indexOf("AT") >= 0)
     {
+        Serial.print("COMANDO AT");
         onReceiveCommandAT(response);
         //flag = true;
     } 
@@ -222,20 +220,22 @@ void selectResponse(String response)
         car.set_connecting(false);
         //flag = true;
     }
-    if(flag == false)
+   /* if(flag == false)
     {
+        Serial.print(" IF FLAG");
         //xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
        // Serial.print("\nResposta nao tratada: ");
        // Serial.print(response);
         //xSemaphoreGive(xSerial_semaphore);
         //flag = true;
-    }
+    }*/
 
 
 }
 
 void onReceiveCommandAT(String responseAt)
-{
+{   
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
     if(responseAt.indexOf(AT_RESET_ALL) >= 0)
     {
         Serial.print("\nELM327: Resetado com sucesso!");
@@ -283,7 +283,7 @@ void onReceiveCommandAT(String responseAt)
         int indexResp = responseAt.indexOf(AT_BATERY_VOLTAGE + 5);
         car.set_batery_voltage(responseAt.substring(indexResp));
     }
-
+    xSemaphoreGive(xSerial_semaphore);
 }
 
 void onReceivedPid(String responsePID)
@@ -395,7 +395,7 @@ void ble_check_comm()
    }else if(car.is_running())
    {
        // ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1");
-         
+      Serial.print("VEÍCULO CONECTADO!"); 
    }
 
    if(car.is_connecting() || !car.is_running())
@@ -411,15 +411,15 @@ void ble_check_comm()
 void ble_at_config()
 {
     Serial.println("\nBLE Conectado!");
-      ble_send_command_at(AT_FAST_RESET);
-      delay(100);
+      ble_send_command_at(AT_DEFAULT_RESTORE);
+      delay(200);
       ble_send_command_at(AT_CABECALHO_OFF);
-      delay(100);
-      ble_send_command_at(AT_ECHO_OFF);
       delay(100);
       ble_send_command_at(AT_PROTOCOLO_AUTO);
       delay(100);
       ble_send_command_at(AT_BATERY_VOLTAGE);
+      delay(100);
+      ble_send_command_at(AT_ECHO_OFF);
       delay(100);
 }
 
@@ -428,9 +428,9 @@ void ble_get_real_time_data()
 {
     
     ble_send_pid(SERVICE_01, RPM_ENGINE, "1");
-  vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
-ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
-   vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
+    vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
+    ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
+    vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
     ble_send_pid(SERVICE_01, POS_ACEL, "1");
     vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
     
