@@ -365,6 +365,12 @@ void onReceivedPid(String responsePID)
         car.set_fuel_type(bufferResponse.substring(indexResp));
     }
 
+ 
+ 
+    
+    
+
+
 }
 
 void ble_check_comm()

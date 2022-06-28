@@ -7,23 +7,16 @@
 #define SERVICE_02  "02"
 
 // PID´S - SERVICE 01
-#define SUPORTED_PIDS_01_20     "00"    
-#define STATUS_DTC              "01"    
-#define TEMP_ENGINE             "05"    
+#define SUPORTED_PIDS_01_20     "00"   //00 
+#define STATUS_DTC              "01"   //01 
+#define TEMP_ENGINE             "05"   //05
 #define RPM_ENGINE              "0C"   //OC 
 #define VEHICLE_SPEED           "0D"   //OD          
 #define POS_ACEL                "11"   //11  
-#define SUPORTED_PIDS_21_40     "20"    
-#define FUEL_TANK_LEVEL_INPUT   "2F"     
-#define SUPORTED_PIDS_41_60     "40"    
-#define VOLTAGE_CONTROL_MODULE  "42"    
-#define TEMP_AMBIENTE           "46"    
-#define FUEL_TYPE               "51"    
-#define FUEL_RATE               "5E"        
-#define SUPORTED_PIDS_61_80     "60"    
-#define TEMP_ENGINE_COOLANT     "67"    
-#define ODOMETER                "A6"    
-#define SUPORTED_PIDS_81_       "80" 
+#define SUPORTED_PIDS_21_40     "20"   //20 
+#define SUPORTED_PIDS_41_60     "40"   //40       
+#define FUEL_TYPE               "51"   //51 
+
 
 // AT COMANDS
 #define AT_CABECALHO_OFF    "AT H0"
