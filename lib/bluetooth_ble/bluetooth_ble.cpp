@@ -259,8 +259,8 @@ void onReceiveCommandAT(String responseAt)
         xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nELM327: Tensao da bateria: ");
         int index = responseAt.lastIndexOf(AT_BATERY_VOLTAGE);
-        Serial.print(responseAt.substring(index + 5));
-        car.set_batery_voltage(responseAt.substring(index + 5));
+        Serial.print(responseAt.substring(index + 5, index + 11));
+        car.set_batery_voltage(responseAt.substring(index + 5, index + 10));
         xSemaphoreGive(xSerial_semaphore);
     }
      else if(responseAt.indexOf(AT_DEFAULT_RESTORE) >= 0)
@@ -301,8 +301,8 @@ void onReceiveCommandAT(String responseAt)
 
     } else if(responseAt.indexOf(AT_BATERY_VOLTAGE) >= 0)
     {
-        int indexResp = responseAt.indexOf(AT_BATERY_VOLTAGE + 5);
-        car.set_batery_voltage(responseAt.substring(indexResp));
+        //int indexResp = responseAt.indexOf(AT_BATERY_VOLTAGE + 5);
+        //car.set_batery_voltage(responseAt.substring(indexResp));
     }
     
 }
@@ -313,88 +313,90 @@ void onReceivedPid(String responsePID)
     int index = responsePID.indexOf("41") + 3;
     int endIndex = index + 2;
     String bufferPid = responsePID.substring(index, endIndex);
+    String bufferResponse = responsePID.substring(index + 2);
 
+ // ESTAVA responsePID -> SUBSTITUIDO POR bufferResponse
 
     if(bufferPid.indexOf(SUPORTED_PIDS_01_20) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_01_20) + PID_LENGTH;
-        car.set_suported_pids_01(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(SUPORTED_PIDS_01_20) + PID_LENGTH;
+        car.set_suported_pids_01(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(STATUS_DTC) >= 0)
     {
-        int indexResp = responsePID.indexOf(STATUS_DTC) + PID_LENGTH;
-        car.set_status_dts(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(STATUS_DTC) + PID_LENGTH;
+        car.set_status_dts(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(TEMP_ENGINE) >= 0)
     {
-        int indexResp = responsePID.indexOf(TEMP_ENGINE) + PID_LENGTH;
-        car.set_temp_01(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(TEMP_ENGINE) + PID_LENGTH;
+        car.set_temp_01(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(RPM_ENGINE) >= 0)
     {
-        int indexResp = responsePID.indexOf(RPM_ENGINE)  + PID_LENGTH;
-        car.set_rpm(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(RPM_ENGINE)  + PID_LENGTH;
+        car.set_rpm(bufferResponse.substring(indexResp));
 
     }
     else if(bufferPid.indexOf(VEHICLE_SPEED) >= 0)
     {
-         int indexResp = responsePID.indexOf(VEHICLE_SPEED) + PID_LENGTH;
-        car.set_speed(responsePID.substring(indexResp));
+         int indexResp = bufferResponse.indexOf(VEHICLE_SPEED) + PID_LENGTH;
+        car.set_speed(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(POS_ACEL) >= 0)
     {
-         int indexResp = responsePID.indexOf(POS_ACEL) + PID_LENGTH;
-        car.set_acel_pos(responsePID.substring(indexResp));
+         int indexResp = bufferResponse.indexOf(POS_ACEL) + PID_LENGTH;
+        car.set_acel_pos(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(SUPORTED_PIDS_21_40) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_21_40) + PID_LENGTH;
-        car.set_suported_pids_21(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(SUPORTED_PIDS_21_40) + PID_LENGTH;
+        car.set_suported_pids_21(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(FUEL_TANK_LEVEL_INPUT) >= 0)
     {
-        int indexResp = responsePID.indexOf(FUEL_TANK_LEVEL_INPUT) + PID_LENGTH;
-        car.set_fuel_level(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(FUEL_TANK_LEVEL_INPUT) + PID_LENGTH;
+        car.set_fuel_level(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(SUPORTED_PIDS_41_60) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_41_60) + PID_LENGTH;
-        car.set_suported_pids_41(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(SUPORTED_PIDS_41_60) + PID_LENGTH;
+        car.set_suported_pids_41(bufferResponse.substring(indexResp));
     }
     else if(bufferPid.indexOf(VOLTAGE_CONTROL_MODULE) >= 0)
     {
-        int indexResp = responsePID.indexOf(VOLTAGE_CONTROL_MODULE) + PID_LENGTH;
-        car.set_voltage(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(VOLTAGE_CONTROL_MODULE) + PID_LENGTH;
+        car.set_voltage(bufferResponse.substring(indexResp));
     }
      else if(bufferPid.indexOf(TEMP_AMBIENTE) >= 0)
     {
-        int indexResp = responsePID.indexOf(TEMP_AMBIENTE) + PID_LENGTH;
-        car.set_ambient_temp(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(TEMP_AMBIENTE) + PID_LENGTH;
+        car.set_ambient_temp(bufferResponse.substring(indexResp));
     }
      else if(bufferPid.indexOf(FUEL_TYPE) >= 0)
     {
-        int indexResp = responsePID.indexOf(FUEL_TYPE) + PID_LENGTH;
-        car.set_fuel_type(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(FUEL_TYPE) + PID_LENGTH;
+        car.set_fuel_type(bufferResponse.substring(indexResp));
     }
      else if(bufferPid.indexOf(FUEL_RATE) >= 0)
     {
-        int indexResp = responsePID.indexOf(FUEL_RATE) + PID_LENGTH;
-        car.set_fuel_rate(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(FUEL_RATE) + PID_LENGTH;
+        car.set_fuel_rate(bufferResponse.substring(indexResp));
     }
      else if(bufferPid.indexOf(SUPORTED_PIDS_61_80) >= 0)
     {
-        int indexResp = responsePID.indexOf(SUPORTED_PIDS_61_80) + PID_LENGTH;
-        car.set_suported_pids_61(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(SUPORTED_PIDS_61_80) + PID_LENGTH;
+        car.set_suported_pids_61(bufferResponse.substring(indexResp));
     }
      else if(bufferPid.indexOf(TEMP_ENGINE_COOLANT) >= 0)
     {
-        int indexResp = responsePID.indexOf(TEMP_ENGINE_COOLANT) + PID_LENGTH;
-        car.set_coolant_temp(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(TEMP_ENGINE_COOLANT) + PID_LENGTH;
+        car.set_coolant_temp(bufferResponse.substring(indexResp));
     }
      else if(bufferPid.indexOf(ODOMETER) >= 0)
     {
-        int indexResp = responsePID.indexOf(ODOMETER) + PID_LENGTH;
-        car.set_odometer(responsePID.substring(indexResp));
+        int indexResp = bufferResponse.indexOf(ODOMETER) + PID_LENGTH;
+        car.set_odometer(bufferResponse.substring(indexResp));
     }
     
     
@@ -426,8 +428,10 @@ void ble_check_comm()
    if(car.is_connecting() || !car.is_running())
    {
     ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1"); // TESTE DE COMUNICAÇÃO
-    
-     
+    vTaskDelay(pdMS_TO_TICKS(500));
+    ble_send_command_at(AT_BATERY_VOLTAGE);
+    vTaskDelay(pdMS_TO_TICKS(500));
+
    }
     
 }
@@ -445,7 +449,9 @@ void ble_at_config()
       delay(100);
       ble_send_command_at(AT_BATERY_VOLTAGE);
       delay(100);
-      ble_send_command_at(AT_ECHO_OFF);
+      ble_send_command_at(AT_ECHO_ON);
+      delay(100);
+      ble_send_command_at(AT_IB_10); /// VERIFICAR
       delay(100);
 }
 

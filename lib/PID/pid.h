@@ -35,6 +35,7 @@
 #define AT_FAST_RESET       "AT WS"
 #define AT_DEFAULT_RESTORE  "AT D"
 #define AT_BATERY_VOLTAGE   "AT RV"
+#define AT_IB_10            "AT IB 10"
 
 
 //AT RESPONSES
