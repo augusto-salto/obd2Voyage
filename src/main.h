@@ -8,7 +8,7 @@
 #include "car.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
-
+#include "interface_com.h"
 
 // TAREFAS
 #include "xtask_real_time_data.h"

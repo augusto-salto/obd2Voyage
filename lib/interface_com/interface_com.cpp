@@ -1,6 +1,6 @@
 #include "interface_com.h"
 
-
+Car car;
 //////////////////////////////////////////////////////////////////////////// REQUEST PID DATA
 //////////////////////////////////////////////////////////////////////////// Envia comandos PID ao ELM
 
@@ -33,14 +33,14 @@ void ElmComm::_responseHandling()
     
     if (response.indexOf("AT") >= 0)
     {
-        onReceiveCommandAT(response);
+        _reponseIsAt(response);
     } 
 
     if(response.indexOf("41") >= 0)
     {
         car.set_running(true);
         car.set_connecting(false);
-        onReceivedPid(response);
+        _responseIsPid(response);
     } 
     
     if(response.indexOf(AT_SEARCHING) >= 0)
@@ -205,9 +205,8 @@ void ElmComm::_responseIsPid(String response)
 //////////////////////////////////////////////////////////////////////////// Check comm
 //////////////////////////////////////////////////////////////////////////// Verifica o status da comunicação
 
-void ElmComm::checkComm()
-{
-        
+void ElmComm::_checkComm()
+{       
     if(car.is_connecting())
    {
     xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
@@ -289,6 +288,44 @@ void ElmComm::requestRealTimeData()
 }
 
 
+
+
+//////////////////////////////////////////////////////////////////////////// Loop
+//////////////////////////////////////////////////////////////////////////// Faz verificação do estado da comunicação e reconecta se necessario
+void ElmComm::elm_loop()
+{
+if (doConnect == true) {
+    if (connectToServer()) {
+        this->initialCommandsAt();
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    } else {
+      Serial.println("\nBle não conectado!");
+    }
+    doConnect = false;
+  }
+
+  if (connected) {
+    this->_checkComm();
+
+  }else if(doScan)
+  {
+    Serial.print("\nPerdeu a comunicação!");
+    ble_reconnect();
+  }
+  
+  vTaskDelay(pdMS_TO_TICKS(500));
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////// ELM SETUP
+//////////////////////////////////////////////////////////////////////////// Faz as configurações iniciais do Bluetooth
+void ElmComm::elm_setup()
+{
+    ble_client_setup();
+}
 
 
 

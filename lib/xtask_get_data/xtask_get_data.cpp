@@ -10,7 +10,7 @@ void xTask_real_time( void *pvParameters )
     {
         if(car.is_running())
         {
-            ble_get_data();
+           //ble_get_data();
         }
         
         vTaskDelay(pdMS_TO_TICKS(100));

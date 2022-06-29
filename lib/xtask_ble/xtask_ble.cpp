@@ -5,13 +5,13 @@ TaskHandle_t handle_ble;
 
 void xTask_ble( void *pvParameters )
 {
-    ble_client_setup();
+                                //ble_client_setup();
     vTaskDelay(pdMS_TO_TICKS(1000));
     bool flagRealTimeIsRunning = false;
 
     while (1)
     {
-        ble_client_loop();
+                                //ble_client_loop();
         
 
         if(car.is_running() && flagRealTimeIsRunning == false)

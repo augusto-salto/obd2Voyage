@@ -9,8 +9,10 @@
 #include "pid.h"
 #include "car.h"
 
-extern Car car;
 
+extern boolean doConnect;
+extern boolean connected;
+extern boolean doScan;
 
 
 
@@ -23,7 +25,7 @@ class ElmComm
         void _responseHandling();                                               // Faz o tratamento das respostas armazenadas no buffer de entrada                                             
         void _reponseIsAt(String response);                                     // Recebe e trata todas as respostas para comandos AT
         void _responseIsPid(String response);                                   // Recebe e trata todas as respostas para comandos PID
-
+        void _checkComm();                                                       // Checa a comunicação
 
 
     public:
@@ -31,7 +33,9 @@ class ElmComm
         void requestData();                                                     // Requisita os dados do ELM
         void requestRealTimeData();                                             // Requisita os dados RT do ELM
         void bufferRead();                                                      // Lê os dados armazenados no buffer de entrada                    
-        void checkComm();                                                       // Checa a comunicação
+        void elm_loop();                                                        // Faz verificações do estado da comunicação, e reconecta se necessario
+        void elm_setup();                                                       // Faz as configurações iniciais da comunicação
+
 };
 
 
