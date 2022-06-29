@@ -41,6 +41,12 @@ void    Car::set_temp_01(String value)
 
     this->_temp_engine = valueInt - 40;
 
+    
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY );
+    Serial.print("\nTEMPERATURA: ");
+    Serial.print(this->_temp_engine);
+    xSemaphoreGive(xSerial_semaphore);
+
     }
 
 

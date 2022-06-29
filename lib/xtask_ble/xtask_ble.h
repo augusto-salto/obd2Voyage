@@ -10,10 +10,11 @@
 
 #include "xtask_real_time_data.h"
 #include "xtask_get_data.h"
+#include "xtask_buffer.h"
 
 extern TaskHandle_t handle_real_time_data;
 extern TaskHandle_t handle_get_data;
-
+extern TaskHandle_t handle_check_buffer;
 
 extern Car car;
 

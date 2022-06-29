@@ -13,6 +13,7 @@
 // TAREFAS
 #include "xtask_real_time_data.h"
 #include "xtask_ble.h"
+#include "xtask_buffer.h"
 
 //FILAS
 QueueHandle_t xQueue_bufferEntrada;

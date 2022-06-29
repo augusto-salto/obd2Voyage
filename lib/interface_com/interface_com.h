@@ -28,7 +28,7 @@ class ElmComm
         void _reponseIsAt(String response);                                     // Recebe e trata todas as respostas para comandos AT
         void _responseIsPid(String response);                                   // Recebe e trata todas as respostas para comandos PID
         void _checkComm();                                                      // Checa a comunicação
-        void _checkBuffer();                                                    // Verifica se há alguma informação no buffer de entrada
+        
 
 
     public:
@@ -38,7 +38,7 @@ class ElmComm
         void bufferRead();                                                      // Lê os dados armazenados no buffer de entrada                    
         void elm_loop();                                                        // Faz verificações do estado da comunicação, e reconecta se necessario
         void elm_setup();                                                       // Faz as configurações iniciais da comunicação
-        
+        void checkBuffer();                                                    // Verifica se há alguma informação no buffer de entrada
 
 };
 

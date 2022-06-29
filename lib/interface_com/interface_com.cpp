@@ -242,7 +242,7 @@ void ElmComm::_checkComm()
    if(car.is_connecting() || !car.is_running())
    {
     ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1"); // TESTE DE COMUNICAÇÃO
-    vTaskDelay(pdMS_TO_TICKS(50));
+    vTaskDelay(pdMS_TO_TICKS(1000));
     //ble_send_command_at(AT_BATERY_VOLTAGE);
     //vTaskDelay(pdMS_TO_TICKS(50));
 
@@ -322,7 +322,7 @@ if (doConnect == true) {
   if (connected) {
     
     this->_checkComm();
-    this->_checkBuffer();
+   
    
 
   }else if(doScan)
@@ -354,7 +354,7 @@ void ElmComm::elm_setup()
 
 //////////////////////////////////////////////////////////////////////////// ELM CHECK BUFFER
 //////////////////////////////////////////////////////////////////////////// Verifica se há alguma coisa no buffer de entrada
-void ElmComm::_checkBuffer()
+void ElmComm::checkBuffer()
 {
     std::string *pStr = NULL;
     String response = "null";

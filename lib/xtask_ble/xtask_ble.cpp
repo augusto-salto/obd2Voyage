@@ -3,14 +3,15 @@
 TaskHandle_t handle_ble;
 ElmComm elm;
 
-//vTask_real_time_start();
-//vTask_get_data_start();
+
 void xTask_ble( void *pvParameters )
 {
 
     elm.elm_setup();
     vTaskDelay(pdMS_TO_TICKS(1000));
     bool flagElmIsRunning = false;
+
+                                
 
     while (1)
     {
@@ -20,13 +21,13 @@ void xTask_ble( void *pvParameters )
         if(car.is_running() && !flagElmIsRunning)
         {
             flagElmIsRunning = true;
-            //vTask_real_time_start();
-            //vTask_get_data_start();
+            vTask_real_time_start();
+            vTask_get_data_start();
             
         }else if(!car.is_running() && flagElmIsRunning)
         {
-            //vTaskDelete(handle_real_time_data);
-            //vTaskDelete(handle_get_data);
+            vTaskDelete(handle_real_time_data);
+            vTaskDelete(handle_get_data);
             flagElmIsRunning = false;
         }
 
