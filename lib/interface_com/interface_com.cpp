@@ -26,11 +26,9 @@ void ElmComm::_sendCommandAt(String commandAt)
 //////////////////////////////////////////////////////////////////////////// RESPONSE HANDLING
 //////////////////////////////////////////////////////////////////////////// Faz o tratamento das respostas armazenadas no buffer de entrada
 
-void ElmComm::_responseHandling()
+void ElmComm::_responseHandling(String response)
 {
 
-    String response = "" ;  //////////////////// TODO ---> LEITURA DO BUFFER DE ENTRADA
-    
     if (response.indexOf("AT") >= 0)
     {
         _reponseIsAt(response);
@@ -129,6 +127,20 @@ void ElmComm::_reponseIsAt(String response)
         Serial.print("\nELM327: Protocolo automatico definido com sucesso!");
         xSemaphoreGive(xSerial_semaphore);
 
+    }  
+    else if(response.indexOf(AT_SEARCHING) >= 0)
+    {
+
+       car.set_running(false);
+       car.set_connecting(true);
+
+    }  
+    else if(response.indexOf(AT_UNABLE_TO_CONECT) >= 0)
+    {
+
+       car.set_running(false);
+       car.set_connecting(false);
+
     } 
     
 }
@@ -142,6 +154,7 @@ void ElmComm::_reponseIsAt(String response)
 
 void ElmComm::_responseIsPid(String response)
 {
+    
     int index = response.indexOf("41") + 3;
     int endIndex = index + 2;
     String bufferPid = response.substring(index, endIndex);
@@ -212,25 +225,26 @@ void ElmComm::_checkComm()
     xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
     Serial.print("\nCONECTANDO...");
     xSemaphoreGive(xSerial_semaphore);
+    car.set_connecting(true);
      
    }else if(!car.is_running())
    {
     xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
     Serial.print("\nVEICULO NAO ENCONTRADO!");
     xSemaphoreGive(xSerial_semaphore);
+    car.set_running(false);
      
    }else if(car.is_running())
    {
-       // ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1");
-     // Serial.print("VEÍCULO CONECTADO!"); 
+    
    }
 
    if(car.is_connecting() || !car.is_running())
    {
     ble_send_pid(SERVICE_01, SUPORTED_PIDS_01_20, "1"); // TESTE DE COMUNICAÇÃO
-    vTaskDelay(pdMS_TO_TICKS(500));
-    ble_send_command_at(AT_BATERY_VOLTAGE);
-    vTaskDelay(pdMS_TO_TICKS(500));
+    vTaskDelay(pdMS_TO_TICKS(50));
+    //ble_send_command_at(AT_BATERY_VOLTAGE);
+    //vTaskDelay(pdMS_TO_TICKS(50));
 
    }
     
@@ -296,8 +310,9 @@ void ElmComm::elm_loop()
 {
 if (doConnect == true) {
     if (connectToServer()) {
+
         this->initialCommandsAt();
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(2000));
     } else {
       Serial.println("\nBle não conectado!");
     }
@@ -305,7 +320,10 @@ if (doConnect == true) {
   }
 
   if (connected) {
+    
     this->_checkComm();
+    this->_checkBuffer();
+   
 
   }else if(doScan)
   {
@@ -313,7 +331,6 @@ if (doConnect == true) {
     ble_reconnect();
   }
   
-  vTaskDelay(pdMS_TO_TICKS(500));
 }
 
 
@@ -328,6 +345,33 @@ void ElmComm::elm_setup()
 }
 
 
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////// ELM CHECK BUFFER
+//////////////////////////////////////////////////////////////////////////// Verifica se há alguma coisa no buffer de entrada
+void ElmComm::_checkBuffer()
+{
+    std::string *pStr = NULL;
+    String response = "null";
+    xQueueReceive(xQueue_bufferEntrada, (void *) &pStr, 100);
+    
+    if(pStr != NULL)
+    {
+        this->_responseHandling(pStr->c_str());
+    }
+    
+    //Serial.print("\nloop3");
+   // if(!response.isEmpty() && !response.equals("null") && !response.equals("") && !response.equals(" "))
+    //{
+      //  _responseHandling(response);
+    //}
+    delete pStr;
+}
 
 
 

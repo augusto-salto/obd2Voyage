@@ -1,9 +1,10 @@
 #include "main.h"
 
-
-
+String resposta = "                                                                        ";
 void setup()
 {
+
+xQueue_bufferEntrada = xQueueCreate( 10, sizeof(std::string *));
 
 xSerial_semaphore = xSemaphoreCreateMutex();
 xHardwareSerial_semaphore = xSemaphoreCreateMutex();
@@ -18,6 +19,6 @@ void loop()
 {
     
  
-   vTaskDelay(pdMS_TO_TICKS(10));
+   vTaskDelay(pdMS_TO_TICKS(100));
 
 }

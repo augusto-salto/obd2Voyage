@@ -15,8 +15,8 @@
 #include "xtask_ble.h"
 
 //FILAS
-QueueHandle_t xQueue_Nivel;
-QueueHandle_t xQueue_android_request;
+QueueHandle_t xQueue_bufferEntrada;
+
 
 // SEMAFOROS
 SemaphoreHandle_t xSerial_semaphore;
@@ -27,6 +27,6 @@ SemaphoreHandle_t xBle_semaphore;
 extern TaskHandle_t handle_real_time_data;
 extern TaskHandle_t handle_ble;
 
-extern Car car;
+//extern Car car;
 
 #endif

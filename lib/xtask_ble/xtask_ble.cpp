@@ -1,31 +1,36 @@
 #include "xtask_ble.h"
 
 TaskHandle_t handle_ble;
+ElmComm elm;
 
-
+//vTask_real_time_start();
+//vTask_get_data_start();
 void xTask_ble( void *pvParameters )
 {
-                                //ble_client_setup();
+
+    elm.elm_setup();
     vTaskDelay(pdMS_TO_TICKS(1000));
-    bool flagRealTimeIsRunning = false;
+    bool flagElmIsRunning = false;
 
     while (1)
     {
-                                //ble_client_loop();
+        elm.elm_loop();
         
 
-        if(car.is_running() && flagRealTimeIsRunning == false)
+        if(car.is_running() && !flagElmIsRunning)
         {
-            flagRealTimeIsRunning = true;
-            vTask_real_time_start();
+            flagElmIsRunning = true;
+            //vTask_real_time_start();
+            //vTask_get_data_start();
             
-        }else if(flagRealTimeIsRunning)
+        }else if(!car.is_running() && flagElmIsRunning)
         {
-            vTaskDelete(handle_real_time_data);
-             flagRealTimeIsRunning = false;
+            //vTaskDelete(handle_real_time_data);
+            //vTaskDelete(handle_get_data);
+            flagElmIsRunning = false;
         }
 
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(500));
     }
     
 
@@ -37,7 +42,7 @@ void vTask_ble_start()
 {
     xTaskCreate( xTask_ble /* Funcao a qual esta implementado o que a tarefa deve fazer */
                 , "xTask_ble_DEBUG" /* Nome (para fins de debug, se necessário) */
-                , 4000 /* Tamanho da stack (em words) reservada para essa tarefa */
+                , 6000 /* Tamanho da stack (em words) reservada para essa tarefa */
                 , NULL /* Parametros passados (nesse caso, não há) */
                 , 10 /* Prioridade */
                 , &handle_ble ); /* Handle da tarefa, opcional  */

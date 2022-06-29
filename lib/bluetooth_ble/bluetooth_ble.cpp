@@ -6,9 +6,9 @@ static BLEUUID serviceUUID("0000fff0-0000-1000-8000-00805f9b34fb");
 static BLEUUID charRxUUID("0000fff1-0000-1000-8000-00805f9b34fb");
 static BLEUUID charTxUUID("0000fff2-0000-1000-8000-00805f9b34fb");
 
-static boolean doConnect = false;
-static boolean connected = false;
-static boolean doScan = false;
+ boolean doConnect = false;
+ boolean connected = false;
+ boolean doScan = false;
 static BLERemoteCharacteristic* pRemoteCharacteristicRx;
 static BLERemoteCharacteristic* pRemoteCharacteristicTx;
 static BLEAdvertisedDevice* myDevice;
@@ -24,9 +24,16 @@ static void notifyCallback(
    // Serial.print("\nRecebido: ");
    // Serial.print((char*)pData);
    // xSemaphoreGive(xSerial_semaphore);
-    xSemaphoreTake(xBle_semaphore, portMAX_DELAY ); 
+    
     //selectResponse((char*)pData);
-    xSemaphoreGive(xBle_semaphore);
+    String bufferEntrada = (char*)pData;
+    std::string *pStr = new std::string((char*)pData);
+
+   // Serial.print("\nSIZE OF: ");
+//    Serial.print(sizeof((char*)pData));
+
+    xQueueSend(xQueue_bufferEntrada, (void *)&pStr, portMAX_DELAY);
+   
     //AQUI VAI ARMAZENAR NO BUFFER
 }
 
@@ -107,7 +114,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
     }  else
     {
         countBle++;
-        if(countBle >= 1)
+        if(countBle >= 3)
         {
             Serial.print("Não encontrado! Reiniciando!");
             vTaskDelay(pdMS_TO_TICKS(500));
@@ -159,7 +166,6 @@ void ble_send_command_at(String command)
     {
         String buff_send = command;
         buff_send += '\r';
-       // Serial.print("\nEnviando: " + buff_send);
         pRemoteCharacteristicTx->writeValue(buff_send.c_str(), buff_send.length());
     }
 

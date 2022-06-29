@@ -330,7 +330,7 @@ void    Car::set_connecting(bool connecting)
 //////////////////////////////////////////// SET RUNNING - COMUNICAÇÃO OBDII ESTÁ RODANDO
 void    Car::set_running(bool running)
 {
-        this->_unable = running;
+        this->_running = running;
         if(running)
         {
             this->_searching = false;
@@ -359,7 +359,7 @@ bool    Car::is_connecting()
 //////////////////////////////////////////// ESTÁ RODANDO
 bool    Car::is_running()
 {   
-    return this->_unable;
+    return this->_running;
 }
 
 

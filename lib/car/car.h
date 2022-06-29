@@ -33,7 +33,8 @@ extern SemaphoreHandle_t xSerial_semaphore;
         int     _odometer = 0;
         float   _batery_voltage = 0.0;
         bool    _searching = false;
-        bool    _unable = true;
+        bool    _unable = false;
+        bool    _running = false;
     
     public:
         void init_car();

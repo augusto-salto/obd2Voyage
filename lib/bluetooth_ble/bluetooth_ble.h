@@ -5,6 +5,8 @@
 #include <BLEDevice.h>
 #include <Arduino.h>
 #include "car.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 
 
 #define bleServerName "OBDBLE"
@@ -19,6 +21,7 @@
 #define CHARACTERISTIC_2                                 "0000fff2-0000-1000-8000-00805f9b34fb" 
 
 extern SemaphoreHandle_t xBle_semaphore;
+extern xQueueHandle xQueue_bufferEntrada;
 
 void ble_client_loop();
 void ble_client_setup();

@@ -1,18 +1,14 @@
-#include "xtask_real_time_data.h"
+#include "xtask_get_data.h"
 
 TaskHandle_t handle_get_data;
 
 
-void xTask_real_time( void *pvParameters )
+void xTask_get_data( void *pvParameters )
 {
 
     while (1)
     {
-        if(car.is_running())
-        {
-           //ble_get_data();
-        }
-        
+        elm.requestData();
         vTaskDelay(pdMS_TO_TICKS(100));
     }
     
@@ -21,11 +17,11 @@ void xTask_real_time( void *pvParameters )
 
 
 
-void vTask_real_time_start()
+void vTask_get_data_start()
 {
-    xTaskCreate( xTask_real_time /* Funcao a qual esta implementado o que a tarefa deve fazer */
+    xTaskCreate( xTask_get_data /* Funcao a qual esta implementado o que a tarefa deve fazer */
                 , "xTask_get_data_DEBUG" /* Nome (para fins de debug, se necessário) */
-                , 2000 /* Tamanho da stack (em words) reservada para essa tarefa */
+                , 4000 /* Tamanho da stack (em words) reservada para essa tarefa */
                 , NULL /* Parametros passados (nesse caso, não há) */
                 , 1 /* Prioridade */
                 , &handle_get_data ); /* Handle da tarefa, opcional  */
