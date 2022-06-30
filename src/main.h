@@ -14,6 +14,7 @@
 #include "xtask_real_time_data.h"
 #include "xtask_ble.h"
 #include "xtask_buffer.h"
+#include "xtask_display.h"
 
 //FILAS
 QueueHandle_t xQueue_bufferEntrada;
