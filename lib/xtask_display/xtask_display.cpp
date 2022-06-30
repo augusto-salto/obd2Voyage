@@ -1,13 +1,38 @@
 #include "xtask_display.h"
 
+HardwareSerial NextionSerial(1);
 
 void xTask_display( void *pvParameters )
 {
 
+    NextionSerial.setPins(16,17);
+    //NextionSerial.begin(9600, SERIAL_8N1, 16, 17);
+    EasyNex myNex(NextionSerial);
+    myNex.begin(9600);
+    myNex.writeStr("page page1");
+    vTaskDelay(pdMS_TO_TICKS(2000));
+
+
+    while (car.is_connecting() || !car.is_running())
+    {
+        myNex.writeStr("page2");
+        vTaskDelay(100);
+    }
+
+    myNex.writeStr("page0");
+    
+
+
     while (1)
     {
-       
-        vTaskDelay(pdMS_TO_TICKS(10));
+        myNex.writeNum("z0.val", car.get_rpm());
+        vTaskDelay(pdMS_TO_TICKS(50));
+        myNex.writeNum("z1.val", car.get_speed());
+        vTaskDelay(pdMS_TO_TICKS(50));
+        myNex.writeStr("t0.txt", (String) car.get_temp_01());
+        vTaskDelay(pdMS_TO_TICKS(50)); 
+         myNex.writeStr("t1.txt", (String) car.get_batery_volt());
+        vTaskDelay(pdMS_TO_TICKS(50));     
     }
     
 

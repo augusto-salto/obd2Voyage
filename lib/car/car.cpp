@@ -312,7 +312,7 @@ void    Car::set_odometer(String value)
 
 void Car::set_batery_voltage(String value)
 {
-    this->_batery_voltage = value.toInt();
+    this->_batery_voltage = value.toFloat();
 }
 
 
@@ -375,4 +375,20 @@ bool    Car::is_running()
 int Car::get_rpm()
 {
     return this->_rpm;
+}
+
+int Car::get_speed()
+{
+    return this->_vehicle_speed;
+}
+
+int Car::get_temp_01()
+{
+    return this->_temp_engine;
+}
+
+
+float Car::get_batery_volt()
+{
+    return this->_batery_voltage;
 }

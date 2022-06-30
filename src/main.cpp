@@ -13,7 +13,7 @@ xBle_semaphore = xSemaphoreCreateMutex();
 Serial.begin(115200);
 vTask_ble_start();
 vTask_check_buffer_start();
-   
+vTask_display_start();
 }
 
 void loop()

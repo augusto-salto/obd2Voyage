@@ -7,7 +7,11 @@
 
 #include "interface_com.h"
 
+#include "HardwareSerial.h"
+#include "EasyNextionLibrary.h"
+
 extern ElmComm elm;
+extern Car car;
 
 void xTask_display( void *pvParameters );
 void vTask_display_start();
