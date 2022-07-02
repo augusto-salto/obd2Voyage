@@ -17,8 +17,6 @@ void xTask_display( void *pvParameters )
     {
         
         vTaskDelay(1000);
-        myNex.writeStr("t0.txt", "Teste!");
-        vTaskDelay(pdMS_TO_TICKS(50));
         xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
         Serial.print("\nLOOP PAGE2");
         xSemaphoreGive(xSerial_semaphore);
