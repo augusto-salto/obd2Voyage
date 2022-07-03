@@ -14,6 +14,8 @@ extern ElmComm elm;
 extern Car car;
 
 extern SemaphoreHandle_t xSerial_semaphore;
+extern SemaphoreHandle_t xHardwareSerial_semaphore;
+
 
 void xTask_display( void *pvParameters );
 void vTask_display_start();
