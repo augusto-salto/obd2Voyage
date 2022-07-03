@@ -37,19 +37,32 @@ void xTask_display( void *pvParameters )
 
     while (1)
     {
+        vTaskDelay(pdMS_TO_TICKS(100));
+        //xQueueReceive(xQueue_bufferRpm, (void *) &calcRpm, portMAX_DELAY);
         calcRpm = car.get_rpm();
         calcRpm = calcRpm/1000;
- 
 
+       //xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+        //Serial.print("\nCALC RPM: ");
+        //Serial.print(calcRpm);
+        //xSemaphoreGive(xSerial_semaphore);
 
         if (calcRpm <= 1.4)
         {
-            rpm = mapfloat(calcRpm, 0, 1.4, 315, 360);
-         
+        rpm = mapfloat(calcRpm, 0, 1.4, 315, 360);
+        //xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+        //Serial.print("\nRPM: ");
+        //Serial.print(rpm);
+        //xSemaphoreGive(xSerial_semaphore);
 
         }else
         {
-            rpm = mapfloat(calcRpm, 1.4, 9, 0, 230);
+        
+        rpm = mapfloat(calcRpm, 1.4, 8, 0, 220);
+        //xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+        //Serial.print("\nRPM2: ");
+        //Serial.print(rpm);
+        //xSemaphoreGive(xSerial_semaphore);
         
         }
 
@@ -102,7 +115,6 @@ void xTask_display( void *pvParameters )
         xSemaphoreTake(xHardwareSerial_semaphore, portMAX_DELAY);
 
         temporary = String(temp);
-        temporary += "C";
 
         myNex.writeStr("t0.txt", temporary);
         vTaskDelay(pdMS_TO_TICKS(50)); 

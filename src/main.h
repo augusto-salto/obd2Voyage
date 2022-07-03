@@ -18,6 +18,7 @@
 
 //FILAS
 QueueHandle_t xQueue_bufferEntrada;
+QueueHandle_t xQueue_bufferRpm;
 
 
 // SEMAFOROS

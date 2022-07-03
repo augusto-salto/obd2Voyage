@@ -11,6 +11,7 @@
 
 
 extern SemaphoreHandle_t xSerial_semaphore;
+extern QueueHandle_t xQueue_bufferRpm;
 
  class Car
 {

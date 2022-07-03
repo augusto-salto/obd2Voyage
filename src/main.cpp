@@ -5,6 +5,7 @@ void setup()
 {
 
 xQueue_bufferEntrada = xQueueCreate( 15, sizeof(std::string *));
+xQueue_bufferRpm = xQueueCreate( 15, sizeof(int));
 
 xSerial_semaphore = xSemaphoreCreateMutex();
 xHardwareSerial_semaphore = xSemaphoreCreateMutex();

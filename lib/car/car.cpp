@@ -69,8 +69,11 @@ void    Car::set_rpm(String value)
     valueA = (int) strtol(bufferA, 0, 16);
     valueB = (int) strtol(bufferB, 0, 16);
 
+    int tempo;
     this->_rpm = (256 * valueA) + valueB;
     this->_rpm = this->_rpm / 4;
+
+   // xQueueSend(xQueue_bufferRpm, (void *)&this->_rpm, portMAX_DELAY); 
 
     xSemaphoreTake(xSerial_semaphore, portMAX_DELAY );
     Serial.print("\nRPM: ");
