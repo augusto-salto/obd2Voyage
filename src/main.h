@@ -26,6 +26,8 @@ SemaphoreHandle_t xSerial_semaphore;
 SemaphoreHandle_t xHardwareSerial_semaphore;
 SemaphoreHandle_t xBle_semaphore;
 
+SemaphoreHandle_t xTrat_semaphore;
+
 //Handle
 extern TaskHandle_t handle_real_time_data;
 extern TaskHandle_t handle_ble;

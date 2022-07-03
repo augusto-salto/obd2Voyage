@@ -4,12 +4,13 @@ String resposta = "                                                             
 void setup()
 {
 
-xQueue_bufferEntrada = xQueueCreate( 15, sizeof(std::string *));
-xQueue_bufferRpm = xQueueCreate( 15, sizeof(int));
+xQueue_bufferEntrada = xQueueCreate( 20, sizeof(std::string *));
+
 
 xSerial_semaphore = xSemaphoreCreateMutex();
 xHardwareSerial_semaphore = xSemaphoreCreateMutex();
 xBle_semaphore = xSemaphoreCreateMutex();
+xTrat_semaphore = xSemaphoreCreateMutex();
 
 Serial.begin(115200);
 vTask_ble_start();

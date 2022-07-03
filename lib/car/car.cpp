@@ -42,10 +42,10 @@ void    Car::set_temp_01(String value)
     this->_temp_engine = valueInt - 40;
 
     
-    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY );
-    Serial.print("\nTEMPERATURA: ");
-    Serial.print(this->_temp_engine);
-    xSemaphoreGive(xSerial_semaphore);
+    //xSemaphoreTake(xSerial_semaphore, portMAX_DELAY );
+   // Serial.print("\nTEMPERATURA: ");
+    //Serial.print(this->_temp_engine);
+    //xSemaphoreGive(xSerial_semaphore);
 
     }
 
@@ -54,6 +54,7 @@ void    Car::set_temp_01(String value)
 //////////////////////////////////////////// RPM ENGINE ////////////////////////////////////////////
 void    Car::set_rpm(String value)
     {  
+        this->_rpm = 0;
     value.trim(); 
     char buffer[value.length() + 1];
     value.toCharArray(buffer, value.length() + 1);
@@ -94,11 +95,11 @@ void    Car::set_speed(String value)
     int valueInt = (int) strtol(buffer, 0, 16);
     this->_vehicle_speed = valueInt;
 
-    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY ); 
-    Serial.print("\nVELOCIDADE: ");
-    Serial.print(this->_vehicle_speed);
-    Serial.print("Km/H");
-    xSemaphoreGive(xSerial_semaphore);
+    //xSemaphoreTake(xSerial_semaphore, portMAX_DELAY ); 
+    //Serial.print("\nVELOCIDADE: ");
+    //Serial.print(this->_vehicle_speed);
+    //Serial.print("Km/H");
+    //xSemaphoreGive(xSerial_semaphore);
     }
 
 

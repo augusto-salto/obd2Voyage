@@ -8,6 +8,7 @@ void xTask_real_time( void *pvParameters )
 
     while (1)
     {
+         vTaskDelay(pdMS_TO_TICKS(100));
        elm.requestRealTimeData();
         vTaskDelay(pdMS_TO_TICKS(100));
     }

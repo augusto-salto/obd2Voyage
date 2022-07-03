@@ -8,7 +8,7 @@ void xTask_get_data( void *pvParameters )
 
     while (1)
     {
-        elm.requestData();
+        //elm.requestData();
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
     

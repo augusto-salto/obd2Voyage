@@ -28,7 +28,7 @@ void ElmComm::_sendCommandAt(String commandAt)
 
 void ElmComm::_responseHandling(String response)
 {
-
+xSemaphoreTake(xTrat_semaphore, portMAX_DELAY);
     if (response.indexOf("AT") >= 0)
     {
         _reponseIsAt(response);
@@ -52,7 +52,7 @@ void ElmComm::_responseHandling(String response)
         car.set_connecting(false);
 
     }
-  
+xSemaphoreGive(xTrat_semaphore);
 }
 
 
@@ -281,7 +281,7 @@ void ElmComm::initialCommandsAt()
 void ElmComm::requestData()
 {
     ble_send_pid(SERVICE_01, TEMP_ENGINE, "1");
-    ble_send_pid(SERVICE_01, FUEL_TYPE, "1");
+   // ble_send_pid(SERVICE_01, FUEL_TYPE, "1");
     ble_send_command_at(AT_BATERY_VOLTAGE);
 }
 
@@ -297,8 +297,8 @@ void ElmComm::requestRealTimeData()
     vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
     ble_send_pid(SERVICE_01, VEHICLE_SPEED, "1");
     vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
-    ble_send_pid(SERVICE_01, POS_ACEL, "1");
-    vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
+   // ble_send_pid(SERVICE_01, POS_ACEL, "1");
+   // vTaskDelay(pdMS_TO_TICKS(REAL_TIME_DELAY));
 }
 
 
@@ -357,7 +357,7 @@ void ElmComm::elm_setup()
 void ElmComm::checkBuffer()
 {
     std::string *pStr = NULL;
-    String response = "null";
+    //String response = "null";
     xQueueReceive(xQueue_bufferEntrada, (void *) &pStr, 100);
     
     if(pStr != NULL)
@@ -365,11 +365,7 @@ void ElmComm::checkBuffer()
         this->_responseHandling(pStr->c_str());
     }
     
-    //Serial.print("\nloop3");
-   // if(!response.isEmpty() && !response.equals("null") && !response.equals("") && !response.equals(" "))
-    //{
-      //  _responseHandling(response);
-    //}
+
     delete pStr;
 }
 

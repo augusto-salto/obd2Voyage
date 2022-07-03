@@ -16,7 +16,7 @@ extern boolean connected;
 extern boolean doScan;
 
 extern xQueueHandle xQueue_bufferEntrada;
-
+extern SemaphoreHandle_t xTrat_semaphore;
 
 class ElmComm
 {
