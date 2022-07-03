@@ -8,15 +8,17 @@
 #include "car.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
-
+#include "interface_com.h"
 
 // TAREFAS
 #include "xtask_real_time_data.h"
 #include "xtask_ble.h"
+#include "xtask_buffer.h"
+#include "xtask_display.h"
 
 //FILAS
-QueueHandle_t xQueue_Nivel;
-QueueHandle_t xQueue_android_request;
+QueueHandle_t xQueue_bufferEntrada;
+
 
 // SEMAFOROS
 SemaphoreHandle_t xSerial_semaphore;
@@ -27,6 +29,6 @@ SemaphoreHandle_t xBle_semaphore;
 extern TaskHandle_t handle_real_time_data;
 extern TaskHandle_t handle_ble;
 
-extern Car car;
+//extern Car car;
 
 #endif

@@ -8,16 +8,29 @@ void Car::init_car()
 }
 
 
+/*************************************************************************************************************
+**************************************************************************************************************
+**************************************************************************************************************
+********************************************* SET FUNCTIONS **************************************************
+**************************************************************************************************************
+**************************************************************************************************************
+**************************************************************************************************************/
+
+//________________________________________________________________________________________________________
+//////////////////////////////////////////// SUPORTED PIDS 01 ////////////////////////////////////////////
 void    Car::set_suported_pids_01(String value)
     {
         this->_suported_01_20 = value;
     }
-
+//__________________________________________________________________________________________________
+//////////////////////////////////////////// STATUS DTS ////////////////////////////////////////////
 void    Car::set_status_dts(String value)
     {
         this->_status_dtc = value;
     }
 
+//___________________________________________________________________________________________________
+//////////////////////////////////////////// TEMP ENGINE ////////////////////////////////////////////
 void    Car::set_temp_01(String value)
     {
     value.trim(); 
@@ -28,8 +41,17 @@ void    Car::set_temp_01(String value)
 
     this->_temp_engine = valueInt - 40;
 
+    
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY );
+    Serial.print("\nTEMPERATURA: ");
+    Serial.print(this->_temp_engine);
+    xSemaphoreGive(xSerial_semaphore);
+
     }
 
+
+//__________________________________________________________________________________________________
+//////////////////////////////////////////// RPM ENGINE ////////////////////////////////////////////
 void    Car::set_rpm(String value)
     {  
     value.trim(); 
@@ -57,6 +79,9 @@ void    Car::set_rpm(String value)
 
     }
 
+
+//______________________________________________________________________________________________________
+////////////////////////////////////////////  VEHICLE SPEED ////////////////////////////////////////////
 void    Car::set_speed(String value)
     {
 
@@ -73,26 +98,19 @@ void    Car::set_speed(String value)
     xSemaphoreGive(xSerial_semaphore);
     }
 
+
+
+ //____________________________________________________________________________________________________
+//////////////////////////////////////////// POSITION ACEL ////////////////////////////////////////////
 void    Car::set_acel_pos(String value)
     {
-      //  xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
-      //  Serial.print("\nVALUE POS: ");
-      //  Serial.print(value);
-      //  xSemaphoreGive(xSerial_semaphore);
+
     
     value.trim(); 
     char buffer[value.length() + 1];
     value.toCharArray(buffer, value.length() + 1);
     int valueInt = (int) strtol(buffer, 0, 16);
-    
-   // xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
-   //     Serial.print("\nVALUE int: ");
-    //    Serial.print(valueInt);
-    //    xSemaphoreGive(xSerial_semaphore);
-    // xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
-      // Serial.print("\ntemp: ");
-        //Serial.print(temp);
-        //xSemaphoreGive(xSerial_semaphore);
+
     this->_pos_acel = 0.39215686 * valueInt;
     
 
@@ -104,11 +122,19 @@ void    Car::set_acel_pos(String value)
 
     }
 
+
+
+//________________________________________________________________________________________________________
+//////////////////////////////////////////// SUPORTED PIDS 21 ////////////////////////////////////////////
 void    Car::set_suported_pids_21(String value)
     {
         this->_suported_21_40 = value;
     }
 
+
+
+//__________________________________________________________________________________________________
+//////////////////////////////////////////// FUEL LEVEL ////////////////////////////////////////////
 void    Car::set_fuel_level(String value)
     {
     value.trim(); 
@@ -118,11 +144,19 @@ void    Car::set_fuel_level(String value)
     this->_fuel_level = (100/255) * valueInt;
     }
 
+
+
+//________________________________________________________________________________________________________
+//////////////////////////////////////////// SUPORTED PIDS 41 ////////////////////////////////////////////
 void    Car::set_suported_pids_41(String value)
     {
         this->_suported_pids_41_60 = value;
     }
 
+
+
+//___________________________________________________________________________________________________
+//////////////////////////////////////////// MCU VOLTAGE ////////////////////////////////////////////
 void    Car::set_voltage(String value)
     {
     value.trim(); 
@@ -144,6 +178,10 @@ void    Car::set_voltage(String value)
     this->_voltage_ecu = this->_voltage_ecu/1000;
     }
 
+
+
+//________________________________________________________________________________________________________
+//////////////////////////////////////////// ENVIRONMENT TEMP ////////////////////////////////////////////
 void    Car::set_ambient_temp(String value)
     {
     value.trim(); 
@@ -155,6 +193,10 @@ void    Car::set_ambient_temp(String value)
     this->_temp_ambiente = valueInt - 40;       
     }
 
+
+
+//_________________________________________________________________________________________________
+//////////////////////////////////////////// FUEL TYPE ////////////////////////////////////////////
 void    Car::set_fuel_type(String value)
     {
     value.trim(); 
@@ -185,6 +227,11 @@ void    Car::set_fuel_type(String value)
 
     }
 
+
+
+
+//_________________________________________________________________________________________________
+//////////////////////////////////////////// FUEL RATE ////////////////////////////////////////////
 void    Car::set_fuel_rate(String value)
     {
     value.trim(); 
@@ -207,16 +254,29 @@ void    Car::set_fuel_rate(String value)
     
     }
 
+
+
+//________________________________________________________________________________________________________
+//////////////////////////////////////////// SUPORTED PIDS 61 ////////////////////////////////////////////
 void    Car::set_suported_pids_61(String value)
     {
         this->_suported_61_80 = value;
     }
 
+
+
+
+//____________________________________________________________________________________________________
+//////////////////////////////////////////// COOLANT TEMP ////////////////////////////////////////////
 void    Car::set_coolant_temp(String value)
     {
         this->_temp_eng_coolant = 40; //TODO
     }
 
+
+
+//________________________________________________________________________________________________
+//////////////////////////////////////////// ODOMETER ////////////////////////////////////////////
 void    Car::set_odometer(String value)
     {
     value.trim(); 
@@ -252,14 +312,14 @@ void    Car::set_odometer(String value)
 
 void Car::set_batery_voltage(String value)
 {
-    this->_batery_voltage = value.toInt();
+    this->_batery_voltage = value.toFloat();
 }
 
-int Car::get_rpm()
-{
-    return this->_rpm;
-}
 
+
+
+//______________________________________________________________________________________________________________________________________________________
+//////////////////////////////////////////// SET CONNECTING - VERIFICA SE ESTA TENTANDO CONECTAR AO VEÍCULO ////////////////////////////////////////////
 void    Car::set_connecting(bool connecting)
 {
         this->_searching = connecting;
@@ -271,9 +331,12 @@ void    Car::set_connecting(bool connecting)
 
 }
 
+
+//_______________________________________________________________________________________
+//////////////////////////////////////////// SET RUNNING - COMUNICAÇÃO OBDII ESTÁ RODANDO
 void    Car::set_running(bool running)
 {
-        this->_unable = running;
+        this->_running = running;
         if(running)
         {
             this->_searching = false;
@@ -285,12 +348,47 @@ void    Car::set_running(bool running)
         }
 }
 
+
+
+
+//_______________________________________________________________________________________________________
+////////////////////////////////////////////  ESTÁ CONECTADO ////////////////////////////////////////////  
 bool    Car::is_connecting()
 {
     return this->_searching;
 }
 
+
+
+
+//_____________________________________________________________________________
+//////////////////////////////////////////// ESTÁ RODANDO
 bool    Car::is_running()
 {   
-    return this->_unable;
+    return this->_running;
+}
+
+
+
+
+// ************************************* GET FUNCTIONS *************************************
+int Car::get_rpm()
+{
+    return this->_rpm;
+}
+
+int Car::get_speed()
+{
+    return this->_vehicle_speed;
+}
+
+int Car::get_temp_01()
+{
+    return this->_temp_engine;
+}
+
+
+float Car::get_batery_volt()
+{
+    return this->_batery_voltage;
 }

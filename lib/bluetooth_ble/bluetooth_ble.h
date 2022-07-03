@@ -5,6 +5,8 @@
 #include <BLEDevice.h>
 #include <Arduino.h>
 #include "car.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 
 
 #define bleServerName "OBDBLE"
@@ -19,20 +21,23 @@
 #define CHARACTERISTIC_2                                 "0000fff2-0000-1000-8000-00805f9b34fb" 
 
 extern SemaphoreHandle_t xBle_semaphore;
+extern xQueueHandle xQueue_bufferEntrada;
 
 void ble_client_loop();
 void ble_client_setup();
 
-void selectResponse(String response);
+//void selectResponse(String response);
 void ble_send_command_at(String command);
 void ble_send_pid(String service, String pid, String qtd_response = "");
-void onReceiveCommandAT(String responseAt);
-void onReceivedPid(String responsePID);
+//void onReceiveCommandAT(String responseAt);
+//void onReceivedPid(String responsePID);
 
-void ble_at_config();
-void ble_get_real_time_data();
-void ble_get_data();
+//void ble_at_config();
+//void ble_get_real_time_data();
+//void ble_get_data();
 void ble_check_comm();
+void ble_reconnect();
+bool connectToServer();
 
 
 
