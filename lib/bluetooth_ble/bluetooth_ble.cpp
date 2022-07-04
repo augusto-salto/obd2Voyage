@@ -14,27 +14,25 @@ static BLERemoteCharacteristic* pRemoteCharacteristicTx;
 static BLEAdvertisedDevice* myDevice;
 
 uint8_t countBle = 0;
+
+
 // ******************************************************************** Callback de recebimento de notificação
 static void notifyCallback(
   BLERemoteCharacteristic* pBLERemoteCharacteristic,
   uint8_t* pData,
   size_t length,
   bool isNotify) {
-   // xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
-   // Serial.print("\nRecebido: ");
-   // Serial.print((char*)pData);
-   // xSemaphoreGive(xSerial_semaphore);
-    
-    //selectResponse((char*)pData);
-    String bufferEntrada = (char*)pData;
-    std::string *pStr = new std::string((char*)pData);
 
-   // Serial.print("\nSIZE OF: ");
-//    Serial.print(sizeof((char*)pData));
-
-    xQueueSend(xQueue_bufferEntrada, (void *)&pStr, portMAX_DELAY);
+  xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+  Serial.print("\nRecebido no callback do bluetooth: ");
+  Serial.print((char*)pData);
+  xSemaphoreGive(xSerial_semaphore);
+ 
+  //String bufferEntrada = (char*)pData;
+  std::string *pStr = new std::string((char*)pData);
+  xQueueSend(xQueue_bufferEntrada, (void *)&pStr, portMAX_DELAY);
    
-    //AQUI VAI ARMAZENAR NO BUFFER
+    
 }
 
 // ******************************************************************** Callback de conexao / desconexao

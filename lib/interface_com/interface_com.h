@@ -29,8 +29,6 @@ class ElmComm
         void _responseIsPid(String response);                                   // Recebe e trata todas as respostas para comandos PID
         void _checkComm();                                                      // Checa a comunicação
         
-
-
     public:
         void initialCommandsAt();                                               // Envia os comandos AT iniciais
         void requestData();                                                     // Requisita os dados do ELM

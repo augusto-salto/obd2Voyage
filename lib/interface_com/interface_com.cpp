@@ -28,6 +28,13 @@ void ElmComm::_sendCommandAt(String commandAt)
 
 void ElmComm::_responseHandling(String response)
 {
+
+    xSemaphoreTake(xSerial_semaphore, portMAX_DELAY);
+    Serial.print("\nResposta recebida no responseHandling: ");
+    Serial.print(response);
+    xSemaphoreGive(xSerial_semaphore);
+
+
 xSemaphoreTake(xTrat_semaphore, portMAX_DELAY);
     if (response.indexOf("AT") >= 0)
     {
@@ -310,9 +317,10 @@ void ElmComm::elm_loop()
 {
 if (doConnect == true) {
     if (connectToServer()) {
-
+        
         this->initialCommandsAt();
         vTaskDelay(pdMS_TO_TICKS(2000));
+
     } else {
       Serial.println("\nBle não conectado!");
     }
@@ -357,14 +365,12 @@ void ElmComm::elm_setup()
 void ElmComm::checkBuffer()
 {
     std::string *pStr = NULL;
-    //String response = "null";
     xQueueReceive(xQueue_bufferEntrada, (void *) &pStr, 100);
     
     if(pStr != NULL)
     {
         this->_responseHandling(pStr->c_str());
     }
-    
 
     delete pStr;
 }

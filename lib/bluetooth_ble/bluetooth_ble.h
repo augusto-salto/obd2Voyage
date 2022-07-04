@@ -23,19 +23,11 @@
 extern SemaphoreHandle_t xBle_semaphore;
 extern xQueueHandle xQueue_bufferEntrada;
 
-void ble_client_loop();
+//void ble_client_loop();
 void ble_client_setup();
-
-//void selectResponse(String response);
 void ble_send_command_at(String command);
 void ble_send_pid(String service, String pid, String qtd_response = "");
-//void onReceiveCommandAT(String responseAt);
-//void onReceivedPid(String responsePID);
-
-//void ble_at_config();
-//void ble_get_real_time_data();
-//void ble_get_data();
-void ble_check_comm();
+//void ble_check_comm();
 void ble_reconnect();
 bool connectToServer();
 
